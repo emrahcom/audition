@@ -1,13 +1,11 @@
-# -*- coding:utf-8 -*-
-
 # -----------------------------------------------------------------------------
-# AUDITION.PY
+# AUDITION-CONFIG.PY
 #
-# This is a Python script used as the config file. Link this file to
-# the application directory using the name 'config.py'
+# This is a Python script used as the config file of the application.
+# Link this file to the application directory using the name 'config.py'
 #
 #     cd audition
-#     ln -s ../config/audition.py config.py
+#     ln -s ../config/audition-config.py config.py
 # -----------------------------------------------------------------------------
 
 import os

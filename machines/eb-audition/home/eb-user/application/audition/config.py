@@ -1,1 +1,1 @@
-../config/audition.py
+../config/audition-config.py

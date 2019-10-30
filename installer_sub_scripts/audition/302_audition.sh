@@ -210,9 +210,15 @@ rsync -aChu home/eb-user/application/ $ROOTFS/home/eb-user/application/
 # the ownership
 lxc-attach -n $MACH -- chown eb-user:eb-user /home/eb-user/application -R
 
-# the application database
+# the application database password
+DB_PASSWD=$(pwgen -AB 12 1)
+sed -i "s/###DB_PASSWD###/$DB_PASSWD/" \
+    $ROOTFS/home/eb-user/application/config/audition.py
 
-# the application config
+lxc-attach -n eb-audition-db -- \
+    zsh -c \
+    "echo ALTER ROLE audition WITH ENCRYPTED PASSWORD \'$DB_PASSWD\' | \
+     su -l postgres -c psql"
 
 # -----------------------------------------------------------------------------
 # SYSTEM CONFIGURATION

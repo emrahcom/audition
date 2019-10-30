@@ -126,16 +126,19 @@ lxc-attach -n $MACH -- \
 # -----------------------------------------------------------------------------
 # DATABASE
 # -----------------------------------------------------------------------------
-# the postgresql config
-cp etc/postgresql/11/main/*.conf $ROOTFS/etc/postgresql/11/main/
-lxc-attach -n $MACH -- systemctl restart postgresql.service
-
 # the application database
 cp -arp ../eb-audition/home/eb-user/audition/databases $ROOTFS/tmp/
 lxc-attach -n $MACH -- \
     zsh -c \
     "su -l postgres \
-        -c 'psql -e -f /tmp/databases/create_audition_database.sql'"
+        -c 'psql -e -f /tmp/databases/create_audition_database.sql'
+     su -l postgres \
+        -c 'psql -e -f /tmp/databases/create_audition_tables.sql'"
+
+# the postgresql config
+cp etc/postgresql/11/main/*.conf $ROOTFS/etc/postgresql/11/main/
+cp etc/postgresql/11/main/conf.d/*.conf $ROOTFS/etc/postgresql/11/main/conf.d/
+lxc-attach -n $MACH -- systemctl restart postgresql.service
 
 # -----------------------------------------------------------------------------
 # CONTAINER SERVICES

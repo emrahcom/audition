@@ -133,7 +133,7 @@ lxc-attach -n $MACH -- \
     "su -l postgres \
         -c 'psql -e -f /tmp/database/create_audition_database.sql'
      su -l postgres \
-        -c 'psql -e -f /tmp/database/create_audition_tables.sql'"
+        -c 'psql -d audition -e -f /tmp/database/create_audition_tables.sql'"
 
 # the postgresql config
 cp etc/postgresql/11/main/*.conf $ROOTFS/etc/postgresql/11/main/

@@ -213,7 +213,7 @@ lxc-attach -n $MACH -- chown eb-user:eb-user /home/eb-user/application -R
 # the application database password
 DB_PASSWD=$(pwgen -AB 12 1)
 sed -i "s/###DB_PASSWD###/$DB_PASSWD/" \
-    $ROOTFS/home/eb-user/application/config/audition-config.py
+    $ROOTFS/home/eb-user/application/config/audition-globals.py
 
 lxc-attach -n eb-audition-db -- \
     zsh -c \

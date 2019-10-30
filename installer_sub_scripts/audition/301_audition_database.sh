@@ -127,13 +127,13 @@ lxc-attach -n $MACH -- \
 # DATABASE
 # -----------------------------------------------------------------------------
 # the application database
-cp -arp ../eb-audition/home/eb-user/audition/databases $ROOTFS/tmp/
+cp -arp ../eb-audition/home/eb-user/application/database $ROOTFS/tmp/
 lxc-attach -n $MACH -- \
     zsh -c \
     "su -l postgres \
-        -c 'psql -e -f /tmp/databases/create_audition_database.sql'
+        -c 'psql -e -f /tmp/database/create_audition_database.sql'
      su -l postgres \
-        -c 'psql -e -f /tmp/databases/create_audition_tables.sql'"
+        -c 'psql -e -f /tmp/database/create_audition_tables.sql'"
 
 # the postgresql config
 cp etc/postgresql/11/main/*.conf $ROOTFS/etc/postgresql/11/main/

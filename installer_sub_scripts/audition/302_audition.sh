@@ -220,7 +220,7 @@ lxc-attach -n $MACH -- \
 # uwsgi
 lxc-attach -n $MACH -- \
     zsh -c \
-    "ln -s /home/eb-user/application/uwsgi/audition.ini
+    "ln -s /home/eb-user/application/uwsgi/audition.ini \
            /etc/uwsgi/apps-enabled/"
 lxc-attach -n $MACH -- systemctl stop uwsgi.service
 lxc-attach -n $MACH -- systemctl start uwsgi.service

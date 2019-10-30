@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
-# AUDITION-CONFIG.PY
+# AUDITION-GLOBALS.PY
 #
-# This is a Python script used as the config file of the application.
-# Link this file to the application directory using the name 'config.py'
+# This is a Python script used to store the globals values.
+# Link this file to the application directory using the name 'globals.py'
 #
-#     cd audition
-#     ln -s ../config/audition-config.py config.py
+#     cd audition/app
+#     ln -s ../config/audition-globals.py globals.py
 # -----------------------------------------------------------------------------
 
 import os

@@ -7,7 +7,7 @@
 #     cd audition/app
 #     ln -s ../../database/audition-models.py models.py
 # -----------------------------------------------------------------------------
-from config import DB_URI
+from app.globals import DB_URI
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session

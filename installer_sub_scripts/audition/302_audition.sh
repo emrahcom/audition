@@ -213,7 +213,7 @@ lxc-attach -n $MACH -- chown eb-user:eb-user /home/eb-user/application -R
 # the application database password
 DB_PASSWD=$(pwgen -AB 12 1)
 sed -i "s/###DB_PASSWD###/$DB_PASSWD/" \
-    $ROOTFS/home/eb-user/application/config/audition.py
+    $ROOTFS/home/eb-user/application/config/audition-config.py
 
 lxc-attach -n eb-audition-db -- \
     zsh -c \
@@ -232,8 +232,8 @@ lxc-attach -n $MACH -- \
 # uwsgi
 lxc-attach -n $MACH -- \
     zsh -c \
-    "ln -s /home/eb-user/application/uwsgi/audition.ini \
-           /etc/uwsgi/apps-enabled/"
+    "ln -s /home/eb-user/application/uwsgi/audition-uwsgi.ini \
+           /etc/uwsgi/apps-enabled/audition.ini"
 lxc-attach -n $MACH -- systemctl stop uwsgi.service
 lxc-attach -n $MACH -- systemctl start uwsgi.service
 

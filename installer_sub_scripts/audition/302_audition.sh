@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# GITEA.SH
+# AUDITION.SH
 # -----------------------------------------------------------------------------
 set -e
 source $INSTALLER/000_source
@@ -7,19 +7,19 @@ source $INSTALLER/000_source
 # -----------------------------------------------------------------------------
 # ENVIRONMENT
 # -----------------------------------------------------------------------------
-MACH="eb-gitea"
+MACH="eb-audition"
 cd $MACHINES/$MACH
 
 ROOTFS="/var/lib/lxc/$MACH/rootfs"
-DNS_RECORD=$(grep "address=/$MACH/" /etc/dnsmasq.d/eb_gitea | head -n1)
+DNS_RECORD=$(grep "address=/$MACH/" /etc/dnsmasq.d/eb_audition | head -n1)
 IP=${DNS_RECORD##*/}
 SSH_PORT="30$(printf %03d ${IP##*.})"
-echo GITEA="$IP" >> $INSTALLER/000_source
+echo AUDITION="$IP" >> $INSTALLER/000_source
 
 # -----------------------------------------------------------------------------
 # NFTABLES RULES
 # -----------------------------------------------------------------------------
-# public ssh
+# the public ssh
 nft delete element eb-nat tcp2ip { $SSH_PORT } 2>/dev/null || true
 nft add element eb-nat tcp2ip { $SSH_PORT : $IP }
 nft delete element eb-nat tcp2port { $SSH_PORT } 2>/dev/null || true
@@ -38,7 +38,7 @@ nft add element eb-nat tcp2port { 443 : 443 }
 # -----------------------------------------------------------------------------
 # INIT
 # -----------------------------------------------------------------------------
-[ "$DONT_RUN_GITEA" = true ] && exit
+[ "$DONT_RUN_AUDITION" = true ] && exit
 
 echo
 echo "-------------------------- $MACH --------------------------"
@@ -47,11 +47,11 @@ echo "-------------------------- $MACH --------------------------"
 # REINSTALL_IF_EXISTS
 # -----------------------------------------------------------------------------
 EXISTS=$(lxc-info -n $MACH | egrep '^State' || true)
-if [ -n "$EXISTS" -a "$REINSTALL_GITEA_IF_EXISTS" != true ]
+if [ -n "$EXISTS" -a "$REINSTALL_AUDITION_IF_EXISTS" != true ]
 then
     echo "Already installed. Skipped..."
     echo
-    echo "Please set REINSTALL_GITEA_IF_EXISTS in $APP_CONFIG"
+    echo "Please set REINSTALL_AUDITION_IF_EXISTS in $APP_CONFIG"
     echo "if you want to reinstall this container"
     exit
 fi
@@ -77,10 +77,10 @@ set -e
 # create the new one
 lxc-copy -n eb-buster -N $MACH -p /var/lib/lxc/
 
-# shared directories
+# the shared directories
 mkdir -p $SHARED/cache
 
-# container config
+# the container config
 rm -rf $ROOTFS/var/cache/apt/archives
 mkdir -p $ROOTFS/var/cache/apt/archives
 sed -i '/^lxc\.net\./d' /var/lib/lxc/$MACH/config
@@ -98,13 +98,13 @@ lxc.net.0.ipv4.gateway = auto
 
 # Start options
 lxc.start.auto = 1
-lxc.start.order = 500
+lxc.start.order = 600
 lxc.start.delay = 2
 lxc.group = eb-group
 lxc.group = onboot
 EOF
 
-# start container
+# start the container
 lxc-start -n $MACH -d
 lxc-wait -n $MACH -s RUNNING
 
@@ -120,33 +120,93 @@ lxc-attach -n $MACH -- \
 # -----------------------------------------------------------------------------
 # PACKAGES
 # -----------------------------------------------------------------------------
+# the multimedia repo
+cp etc/apt/sources.list.d/multimedia.list $ROOTFS/etc/apt/sources.list.d/
+lxc-attach -n $MACH -- \
+    zsh -c \
+    "apt-get $APT_PROXY_OPTION -oAcquire::AllowInsecureRepositories=true update
+     sleep 3
+     apt-get $APT_PROXY_OPTION --allow-unauthenticated -y install \
+             deb-multimedia-keyring"
+
 # update
 lxc-attach -n $MACH -- \
     zsh -c \
     "apt-get $APT_PROXY_OPTION update
-     sleep 3
      apt-get $APT_PROXY_OPTION -y dist-upgrade"
 
-# packages
+# utils
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
-     debconf-set-selections <<< \
-         'mysql-server mysql-server/root_password password'
-     debconf-set-selections <<< \
-         'mysql-server mysql-server/root_password_again password'
-     apt-get $APT_PROXY_OPTION -y install mariadb-server"
+     apt-get install -y ffmpeg"
 
+# redis
+lxc-attach -n $MACH -- \
+    zsh -c \
+    "export DEBIAN_FRONTEND=noninteractive
+     apt-get install -y redis-server"
+
+# python3
+lxc-attach -n $MACH -- \
+    zsh -c \
+    "export DEBIAN_FRONTEND=noninteractive
+     apt-get $APT_PROXY_OPTION -y install libpq-dev
+     apt-get $APT_PROXY_OPTION -y install libcurl3-gnutls-dev librtmp-dev
+     apt-get $APT_PROXY_OPTION -y install python3-pip --install-recommends"
+lxc-attach -n $MACH -- \
+    zsh -c \
+    "pip3 install --upgrade setuptools wheel
+     pip3 install psycopg2
+     pip3 install flask flask_session flask_restful
+     pip3 install sqlalchemy
+     pip3 install redis requests schema"
+
+# web
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
      apt-get install -y ssl-cert ca-certificates certbot
-     apt-get install -y nginx-extras"
+     apt-get $APT_PROXY_OPTION -y install nginx-extras
+     apt-get $APT_PROXY_OPTION -y install uwsgi uwsgi-plugin-python3"
 
-lxc-attach -n $MACH -- \
-    zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
-     apt-get install -y git"
+# -----------------------------------------------------------------------------
+# EB-USER
+# -----------------------------------------------------------------------------
+# add the user
+lxc-attach -n $MACH -- adduser eb-user --disabled-password --gecos ""
+
+# shell
+lxc-attach -n $MACH -- chsh -s /bin/zsh eb-user
+cp $MACHINE_BUSTER/home/eb-user/.vimrc $ROOTFS/home/eb-user/
+cp $MACHINE_BUSTER/home/eb-user/.zshrc $ROOTFS/home/eb-user/
+cp $MACHINE_BUSTER/home/eb-user/.tmux.conf $ROOTFS/home/eb-user/
+
+# ssh
+if [ -f /root/.ssh/authorized_keys ]
+then
+    mkdir $ROOTFS/home/eb-user/.ssh
+    cp /root/.ssh/authorized_keys $ROOTFS/home/eb-user/.ssh/
+    chmod 700 $ROOTFS/home/eb-user/.ssh
+    chmod 600 $ROOTFS/home/eb-user/.ssh/authorized_keys
+fi
+
+# the ownership
+lxc-attach -n $MACH -- chown eb-user:eb-user /home/eb-user -R
+
+# -----------------------------------------------------------------------------
+# THE APPLICATIONS
+# -----------------------------------------------------------------------------
+# copy the application directory
+mkdir $ROOTFS/home/eb-user/application
+rsync -aChu home/eb-user/application/ $ROOTFS/home/eb-user/application/
+
+# the ownership
+lxc-attach -n $MACH -- chown eb-user:eb-user /home/eb-user/application -R
+
+# the application database
+
+# the application config
 
 # -----------------------------------------------------------------------------
 # SYSTEM CONFIGURATION
@@ -157,11 +217,18 @@ lxc-attach -n $MACH -- \
     "ln -s ssl-cert-snakeoil.pem /etc/ssl/certs/ssl-eb.pem
      ln -s ssl-cert-snakeoil.key /etc/ssl/private/ssl-eb.key"
 
+# uwsgi
+lxc-attach -n $MACH -- \
+    zsh -c \
+    "ln -s /home/eb-user/application/uwsgi/audition.ini
+           /etc/uwsgi/apps-enabled/"
+lxc-attach -n $MACH -- systemctl stop uwsgi.service
+lxc-attach -n $MACH -- systemctl start uwsgi.service
+
 # nginx
-cp etc/nginx/conf.d/custom.conf $ROOTFS/etc/nginx/conf.d/
 cp etc/nginx/snippets/eb_ssl.conf $ROOTFS/etc/nginx/snippets/
-cp etc/nginx/sites-available/gitea $ROOTFS/etc/nginx/sites-available/
-ln -s ../sites-available/gitea $ROOTFS/etc/nginx/sites-enabled/
+cp etc/nginx/sites-available/audition.conf $ROOTFS/etc/nginx/sites-available/
+ln -s ../sites-available/audition.conf $ROOTFS/etc/nginx/sites-enabled/
 rm $ROOTFS/etc/nginx/sites-enabled/default
 
 lxc-attach -n $MACH -- systemctl stop nginx.service
@@ -170,93 +237,6 @@ lxc-attach -n $MACH -- systemctl start nginx.service
 # certbot service
 cp ../common/lib/systemd/system/certbot.service $ROOTFS/lib/systemd/system/
 lxc-attach -n $MACH -- systemctl daemon-reload
-
-# -----------------------------------------------------------------------------
-# GITEA
-# -----------------------------------------------------------------------------
-# gitea user
-lxc-attach -n $MACH -- adduser gitea --system --group --disabled-password \
-    --shell /bin/bash --gecos ''
-
-# gitea database
-lxc-attach -n $MACH -- mysql <<EOF
-CREATE DATABASE gitea DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER gitea@localhost IDENTIFIED VIA unix_socket;
-GRANT ALL PRIVILEGES on gitea.* to gitea@localhost;
-EOF
-
-# gitea download
-latest_dir=$(curl -s https://dl.gitea.io/gitea/ | \
-	     ack -o "/gitea/\d+\.\d+\.\d+/" | tail -n1 | \
-	     sed 's~\(^/\|/$\)~~g')
-latest_ver=$(echo $latest_dir | sed 's~/~-~g')
-latest_lnk="https://dl.gitea.io/$latest_dir/$latest_ver-linux-amd64"
-
-[[ -z "$latest_ver" ]] && \
-[[ -n "$(find /root/eb_store -maxdepth 1 -name 'gitea-*-linux-amd64')" ]] && \
-latest_ver=$(ls -1 /root/eb_store/gitea-*-linux-amd64 | \
-             ack -o 'gitea-\d+\.\d+\.\d+' | tail -n1)
-
-mkdir -p /root/eb_store
-if [[ ! -f "/root/eb_store/$latest_ver-linux-amd64" ]]
-then
-    wget -NP /tmp $latest_lnk
-    mv /tmp/$latest_ver-linux-amd64 /root/eb_store/
-else
-    echo "Gitea already exists. Skipped the download"
-fi
-
-# deploy the gitea application
-cp /root/eb_store/$latest_ver-linux-amd64 $ROOTFS/home/gitea/
-lxc-attach -n $MACH -- \
-    zsh -c \
-    "chown gitea:gitea /home/gitea/$latest_ver-linux-amd64
-     chmod u+x /home/gitea/$latest_ver-linux-amd64
-     su -l gitea -c 'ln -s $latest_ver-linux-amd64 /home/gitea/gitea'"
-
-# Gitea initial config
-lxc-attach -n $MACH -- \
-    zsh -c \
-    "su -l gitea -c '/home/gitea/gitea web >/dev/null 2>&1'" &
-
-lxc-attach -n $MACH -- \
-    zsh -c \
-    "while true; do sleep 1; curl --head http://127.0.0.1:3000 && break; done"
-lxc-attach -n $MACH -- \
-    zsh -c \
-    "curl -s -X POST \
-	 -d 'app_name=Gitea: Git with a cup of tea' \
-         -d 'db_type=MySQL&db_host=/var/run/mysqld/mysqld.sock' \
-         -d 'db_user=gitea&db_passwd=&db_name=gitea&charset=utf8mb4' \
-	 -d 'repo_root_path=/home/gitea/gitea-repositories' \
-	 -d 'lfs_root_path=/home/gitea/data/lfs' \
-	 -d 'log_root_path=/home/gitea/log' \
-	 -d 'domain=$REMOTE_IP&ssh_port=$SSH_PORT&run_user=gitea' \
-	 -d 'app_url=https://$REMOTE_IP/&http_port=3000' \
-	 -d 'ssl_mode=disable' \
-	 http://127.0.0.1:3000/install
-     sleep 3"
-lxc-attach -n $MACH -- \
-    zsh -c \
-    "pkill gitea"
-lxc-attach -n $MACH -- \
-    zsh -c \
-    "sed -i '/^INSTALL_LOCK/ s/true/false/' /home/gitea/custom/conf/app.ini"
-
-# Gitea upgrade script
-cp root/eb_scripts/upgrade_gitea.sh $ROOTFS/root/eb_scripts/
-chmod u+x $ROOTFS/root/eb_scripts/upgrade_gitea.sh
-
-# systemd the gitea services
-cp etc/systemd/system/gitea.service $ROOTFS/etc/systemd/system/
-cp etc/systemd/system/upgrade_gitea.service $ROOTFS/etc/systemd/system/
-lxc-attach -n $MACH -- \
-    zsh -c \
-    "systemctl daemon-reload
-     systemctl enable gitea.service
-     systemctl enable upgrade_gitea.service
-     systemctl restart gitea.service
-     systemctl restart upgrade_gitea.service"
 
 # -----------------------------------------------------------------------------
 # CONTAINER SERVICES

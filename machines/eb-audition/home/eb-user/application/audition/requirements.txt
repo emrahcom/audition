@@ -1,0 +1,8 @@
+flask
+flask-restful
+flask-session
+redis
+requests
+sqlalchemy
+schema
+psycopg2

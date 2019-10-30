@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# POSTGRESQL.SH
+# AUDITION_DATABASE.SH
 # -----------------------------------------------------------------------------
 set -e
 source $INSTALLER/000_source
@@ -19,7 +19,7 @@ echo DATABASE="$IP" >> $INSTALLER/000_source
 # -----------------------------------------------------------------------------
 # NFTABLES RULES
 # -----------------------------------------------------------------------------
-# public ssh
+# the public ssh
 nft delete element eb-nat tcp2ip { $SSH_PORT } 2>/dev/null || true
 nft add element eb-nat tcp2ip { $SSH_PORT : $IP }
 nft delete element eb-nat tcp2port { $SSH_PORT } 2>/dev/null || true
@@ -67,10 +67,10 @@ set -e
 # create the new one
 lxc-copy -n eb-buster -N $MACH -p /var/lib/lxc/
 
-# shared directories
+# the shared directories
 mkdir -p $SHARED/cache
 
-# container config
+# the container config
 rm -rf $ROOTFS/var/cache/apt/archives
 mkdir -p $ROOTFS/var/cache/apt/archives
 sed -i '/^lxc\.net\./d' /var/lib/lxc/$MACH/config
@@ -94,7 +94,7 @@ lxc.group = eb-group
 lxc.group = onboot
 EOF
 
-# start container
+# start the container
 lxc-start -n $MACH -d
 lxc-wait -n $MACH -s RUNNING
 
@@ -117,7 +117,7 @@ lxc-attach -n $MACH -- \
      sleep 3
      apt-get $APT_PROXY_OPTION -y dist-upgrade"
 
-# packages
+# the packages
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive

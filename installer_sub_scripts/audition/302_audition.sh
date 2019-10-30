@@ -147,6 +147,12 @@ lxc-attach -n $MACH -- \
     "export DEBIAN_FRONTEND=noninteractive
      apt-get install -y redis-server"
 
+# postgresql-client
+lxc-attach -n $MACH -- \
+    zsh -c \
+    "export DEBIAN_FRONTEND=noninteractive
+     apt-get install -y postgresql-client --install-recommends"
+
 # python3
 lxc-attach -n $MACH -- \
     zsh -c \

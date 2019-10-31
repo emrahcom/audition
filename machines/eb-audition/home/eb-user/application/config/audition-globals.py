@@ -20,4 +20,5 @@ BASEDIR = os.path.dirname(BASEDIR)
 # -----------------------------------------------------------------------------
 # DATABASE
 # -----------------------------------------------------------------------------
-DB_URI = 'postgresql+psycopg2://audition:###DB-PASSWD###@eb-audition-db/audition'
+DB_URI = ('postgresql+psycopg2://'
+          'audition:###DB-PASSWD###@eb-audition-db/audition')

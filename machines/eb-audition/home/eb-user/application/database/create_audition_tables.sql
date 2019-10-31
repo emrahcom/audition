@@ -2,10 +2,11 @@
 -- CREATE_AUDITION_TABLES.SQL
 -- ----------------------------------------------------------------------------
 -- Create the database tables.
--- Tested on Potsgresql 11.
+-- Tested on Postgresql 11.
 --
 -- Usage:
---     psql -l postgres -c "psql -e -f /tmp/create_audition_tables.sql"
+--     psql -l postgres -c \
+--             "psql -d audition -e -f /tmp/create_audition_tables.sql"
 --
 -- ----------------------------------------------------------------------------
 

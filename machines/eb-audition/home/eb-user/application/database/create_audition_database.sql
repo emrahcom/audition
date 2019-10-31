@@ -2,7 +2,7 @@
 -- CREATE_AUDITION_DATABASE.SQL
 -- ----------------------------------------------------------------------------
 -- Create the database and the database user.
--- Tested on Potsgresql 11.
+-- Tested on Postgresql 11.
 --
 -- Usage:
 --     su -l postgres -c "psql -e -f /tmp/create_audition_database.sql"

@@ -24,7 +24,7 @@ BEGIN;
 CREATE TABLE param (
     "id" serial NOT NULL PRIMARY KEY,
     "key" varchar(50) NOT NULL UNIQUE,
-    "value" varchar(250)
+    "value" varchar(250) NOT NULL
 );
 ALTER TABLE param OWNER TO audition;
 -- ----------------------------------------------------------------------------
@@ -40,7 +40,7 @@ ALTER TABLE param OWNER TO audition;
 CREATE TABLE employer (
     "id" serial NOT NULL PRIMARY KEY,
     "email" varchar(250) NOT NULL UNIQUE,
-    "passwd" varchar(250),
+    "passwd" varchar(250) NOT NULL,
     "active" boolean NOT NULL DEFAULT TRUE
 );
 CREATE INDEX employer_active ON employer("active");

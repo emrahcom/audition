@@ -8,16 +8,19 @@
 #     ln -s ../../database/audition-models.py models.py
 # -----------------------------------------------------------------------------
 from app.globals import DB_URI
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session, relationship, backref
 from sqlalchemy import create_engine
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, text
+from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.pool import NullPool
+from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+engine = create_engine(DB_URI, poolclass=NullPool)
+Transaction = sessionmaker(bind=engine)
+Table = declarative_base()
+Table.metadata.bind = engine
 
 
-class Param(Base):
+class Param(Table):
     __tablename__ = 'param'
 
     id = Column(Integer, primary_key=True)
@@ -25,7 +28,7 @@ class Param(Base):
     value = Column(String(250), nullable=False)
 
 
-class Employer(Base):
+class Employer(Table):
     __tablename__ = 'employer'
 
     id = Column(Integer, primary_key=True)
@@ -35,19 +38,15 @@ class Employer(Base):
                     default=True, server_default=text('TRUE'))
 
 
-class Job(Base):
+class Job(Table):
     __tablename__ = 'job'
 
     id = Column(Integer, primary_key=True)
     employer_id = Column(Integer,
                          ForeignKey('employer.id', ondelete='CASCADE'),
                          nullable=False, index=True)
-    employer = relationship('Employer', backref=backref('jobs', lazy=True,
+    employer = relationship('Employer', backref=backref('jobs',
+                            cascade='all, delete-orphan',
                             passive_deletes=True))
     active = Column(Boolean, nullable=False, index=True,
                     default=True, server_default=text('TRUE'))
-
-
-engine = create_engine(DB_URI, poolclass=NullPool)
-DBSession = scoped_session(sessionmaker(bind=engine))
-Base.metadata.bind = engine

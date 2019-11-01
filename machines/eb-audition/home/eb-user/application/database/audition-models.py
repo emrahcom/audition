@@ -51,4 +51,3 @@ class Job(Base):
 engine = create_engine(DB_URI, poolclass=NullPool)
 DBSession = scoped_session(sessionmaker(bind=engine))
 Base.metadata.bind = engine
-# https://stackoverflow.com/questions/5033547/sqlalchemy-cascade-delete

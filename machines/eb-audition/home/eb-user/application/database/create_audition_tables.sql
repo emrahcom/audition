@@ -43,7 +43,7 @@ CREATE TABLE employer (
     "passwd" varchar(250) NOT NULL,
     "active" boolean NOT NULL DEFAULT TRUE
 );
-CREATE INDEX employer_active ON employer("active");
+CREATE INDEX ON employer("active");
 ALTER TABLE employer OWNER TO audition;
 -- ----------------------------------------------------------------------------
 -- JOB
@@ -51,17 +51,17 @@ ALTER TABLE employer OWNER TO audition;
 -- This table stores the job base data.
 --
 -- id                   : the record id
--- employer             : the employer
+-- employer_id          : the employer
 -- active               : is the record active?
 -- ----------------------------------------------------------------------------
 CREATE TABLE job (
     "id" serial NOT NULL PRIMARY KEY,
-    "employer" integer NOT NULL REFERENCES employer("id")
-                                ON DELETE CASCADE,
+    "employer_id" integer NOT NULL REFERENCES employer("id")
+                                   ON DELETE CASCADE,
     "active" boolean NOT NULL DEFAULT TRUE
 );
-CREATE INDEX job_employer ON job("employer");
-CREATE INDEX job_active ON job("active");
+CREATE INDEX ON job("employer_id");
+CREATE INDEX ON job("active");
 ALTER TABLE job OWNER TO audition;
 -- ----------------------------------------------------------------------------
 

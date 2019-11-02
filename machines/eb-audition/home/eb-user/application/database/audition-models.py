@@ -48,5 +48,6 @@ class Job(Table):
     employer = relationship('Employer', backref=backref('jobs',
                             cascade='all, delete-orphan',
                             passive_deletes=True))
+    title = Column(String(250), nullable=False)
     active = Column(Boolean, nullable=False, index=True,
                     default=True, server_default=text('TRUE'))

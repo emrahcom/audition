@@ -11,10 +11,12 @@ from app.globals import DB_URI
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, text
 from sqlalchemy.orm import sessionmaker, relationship, backref
-from sqlalchemy.pool import NullPool
+from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine(DB_URI, poolclass=NullPool)
+engine = create_engine(DB_URI, poolclass=QueuePool, pool_pre_ping=True,
+                       pool_size=2, max_overflow=10, pool_timeout=30,
+                       pool_recycle=3600, pool_use_lifo=True)
 Transaction = sessionmaker(bind=engine)
 Table = declarative_base()
 Table.metadata.bind = engine

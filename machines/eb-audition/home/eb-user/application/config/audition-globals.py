@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # AUDITION-GLOBALS.PY
 #
-# This is a Python script used to store the globals values.
+# This is a Python script used to store the global variables.
 # Link this file to the application directory using the name 'globals.py'
 #
 #     cd audition/app

@@ -163,10 +163,9 @@ lxc-attach -n $MACH -- \
 lxc-attach -n $MACH -- \
     zsh -c \
     "pip3 install --upgrade setuptools wheel
-     pip3 install psycopg2
-     pip3 install flask flask_session flask_restful
-     pip3 install sqlalchemy
-     pip3 install redis requests schema"
+     pip3 install Flask Flask-RESTful Flask-Session
+     pip3 install redis requests schema
+     pip3 install SQLAlchemy psycopg2"
 
 # web
 lxc-attach -n $MACH -- \

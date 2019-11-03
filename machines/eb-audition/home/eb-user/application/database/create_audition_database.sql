@@ -1,7 +1,7 @@
 -- ----------------------------------------------------------------------------
 -- CREATE_AUDITION_DATABASE.SQL
 -- ----------------------------------------------------------------------------
--- Create the database and the database user.
+-- This script creates the database and the database user.
 -- Tested on Postgresql 11.
 --
 -- Usage:

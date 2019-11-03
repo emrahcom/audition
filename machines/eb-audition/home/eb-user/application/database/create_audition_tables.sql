@@ -1,7 +1,7 @@
 -- ----------------------------------------------------------------------------
 -- CREATE_AUDITION_TABLES.SQL
 -- ----------------------------------------------------------------------------
--- Create the database tables.
+-- This script creates the database tables.
 -- Tested on Postgresql 11.
 --
 -- Usage:
@@ -52,12 +52,14 @@ ALTER TABLE employer OWNER TO audition;
 --
 -- id                   : the record id
 -- employer_id          : the employer
+-- title                : the job title
 -- active               : is the record active?
 -- ----------------------------------------------------------------------------
 CREATE TABLE job (
     "id" serial NOT NULL PRIMARY KEY,
     "employer_id" integer NOT NULL REFERENCES employer("id")
                                    ON DELETE CASCADE,
+    "title" varchar(250) NOT NULL,
     "active" boolean NOT NULL DEFAULT TRUE
 );
 CREATE INDEX ON job("employer_id");

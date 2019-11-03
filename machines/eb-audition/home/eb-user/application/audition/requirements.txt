@@ -1,8 +1,8 @@
-flask
-flask-restful
-flask-session
+Flask
+Flask-RESTful
+Flask-Session
 redis
 requests
-sqlalchemy
 schema
+SQLAlchemy
 psycopg2

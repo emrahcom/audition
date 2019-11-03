@@ -15,7 +15,7 @@ process but if the `max_overflow` is greater than `0` then the possible
 maximum number is:
 
 ```
-max-connections = uwsgi.processes + (pool_size + max_overflow)
+max-connections = uwsgi.processes * (pool_size + max_overflow)
 ```
 
 See [audition-models.py](

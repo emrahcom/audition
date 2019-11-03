@@ -18,6 +18,9 @@ maximum number is:
 max-connections = uwsgi.processes * (pool_size + max_overflow)
 ```
 
+It's good to reserve at least one connection for each thread. Therefore keep
+`pool_size + max_overflow` greater than the UWSGI `max-threads`.
+
 See [audition-models.py](
 ../machines/eb-audition/home/eb-user/application/database/audition-models.py)
 

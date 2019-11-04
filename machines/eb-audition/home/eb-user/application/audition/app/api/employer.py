@@ -1,5 +1,6 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_restful import Api, Resource
+from schema import SchemaError
 from app.schema import EMPLOYER_ID_SCHEMA
 
 
@@ -9,12 +10,10 @@ class Employer(Resource):
             EMPLOYER_ID_SCHEMA.validate(request.json)
         except SchemaError as e:
             return {'status': 'SCHEMA ERROR',
-                    'errcode': e.code,
-                    'errdesc': e.description}
+                    'err': str(e)}
         except Exception as e:
             return {'status': 'UNEXPECTED ERROR',
-                    'errcode': e.code,
-                    'errdesc': e.description}
+                    'err': str(e)}
 
         return {'status': 'OK',
                 'data': ''}

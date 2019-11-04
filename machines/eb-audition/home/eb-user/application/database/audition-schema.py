@@ -8,7 +8,7 @@
 #     ln -s ../../database/audition-schema.py schema.py
 # -----------------------------------------------------------------------------
 
-from schema import Schema, Use
+from schema import Schema
 
 EMPLOYER_ID_SCHEMA = Schema({
     'id': int

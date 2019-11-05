@@ -6,11 +6,11 @@ def get_employer_by_id(id_):
         trans = Transaction()
         employer = trans.query(Employer).get(id_)
 
-        return ('OK', '', [employer.to_dict()])
+        return ('ok', '', [employer.to_dict()])
     except AttributeError:
-        return ('OK', '', [])
+        return ('ok', '', [])
     except Exception as e:
-        return ('MODULE ERROR', str(e), [])
+        return ('err', '{}: {}'.format(e.__class__.__name__, e), [])
 
 
 def get_employer_by_filter(req):
@@ -18,6 +18,6 @@ def get_employer_by_filter(req):
         trans = Transaction()
         employer = trans.query(Employer).all()
 
-        return ('OK', '', [e.to_dict() for e in employer])
+        return ('ok', '', [e.to_dict() for e in employer])
     except Exception as e:
-        return ('MODULE ERROR', str(e), [])
+        return ('err', '{}: {}'.format(e.__class__.__name__, e), [])

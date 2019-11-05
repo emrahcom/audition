@@ -11,7 +11,9 @@ class Employer(Resource):
             else:
                 (status, err, data) = get_employer_by_id(id_)
         except Exception as e:
-            return {'status': 'UNEXPECTED ERROR', 'err': str(e), 'data': []}
+            return {'status': 'error',
+                    'err': '{}: {}'.format(e.__class__.__name__, e),
+                    'data': []}
 
         return {'status': status, 'err': err, 'data': data}
 

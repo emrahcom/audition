@@ -7,6 +7,8 @@ def get_employer_by_id(id_):
         employer = trans.query(Employer).get(id_)
 
         return ('OK', '', [employer.to_dict()])
+    except AttributeError:
+        return ('OK', '', [])
     except Exception as e:
         return ('MODULE ERROR', str(e), [])
 

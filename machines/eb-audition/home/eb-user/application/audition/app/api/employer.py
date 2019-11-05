@@ -18,5 +18,5 @@ class Employer(Resource):
 
 bp = Blueprint('employer', __name__)
 api = Api(bp)
-api.add_resource(Employer, '/api/employer/<int:id>',
+api.add_resource(Employer, '/api/employer/<int:id_>',
                            '/api/employer')

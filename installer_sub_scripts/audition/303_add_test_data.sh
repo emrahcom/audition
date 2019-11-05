@@ -7,6 +7,7 @@ source $INSTALLER/000_source
 # -----------------------------------------------------------------------------
 # ENVIRONMENT
 # -----------------------------------------------------------------------------
+MACH="eb-audition"
 cd $MACHINES/$MACH
 
 ROOTFS="/var/lib/lxc/$MACH/rootfs"
@@ -34,3 +35,12 @@ then
     echo "if you want to recreate a new database container and "
     echo "to add the test data"
 fi
+
+# -----------------------------------------------------------------------------
+# DATABASE TEST DATA
+# -----------------------------------------------------------------------------
+cp -arp home/eb-user/application/database $ROOTFS/tmp/
+lxc-attach -n eb-audition-db -- \
+    zsh -c \
+    "su -l postgres \
+        -c 'psql -d audition -e -f /tmp/database/audition-test-data.sql'"

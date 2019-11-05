@@ -1,11 +1,11 @@
 -- ----------------------------------------------------------------------------
--- CREATE_AUDITION_DATABASE.SQL
+-- CREATE-AUDITION-DATABASE.SQL
 -- ----------------------------------------------------------------------------
 -- This script creates the database and the database user.
 -- Tested on Postgresql 11.
 --
 -- Usage:
---     su -l postgres -c "psql -e -f /tmp/create_audition_database.sql"
+--     su -l postgres -c "psql -e -f /tmp/create-audition-database.sql"
 --
 -- ----------------------------------------------------------------------------
 

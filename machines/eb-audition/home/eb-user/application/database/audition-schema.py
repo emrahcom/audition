@@ -10,6 +10,6 @@
 
 from schema import Schema
 
-EMPLOYER_ID_SCHEMA = Schema({
+ID_SCH = Schema({
     'id': int
 })

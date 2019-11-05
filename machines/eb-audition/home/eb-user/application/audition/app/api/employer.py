@@ -1,24 +1,22 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
-from schema import SchemaError
-from app.schema import EMPLOYER_ID_SCHEMA
+from app.modules.employer import (get_employer_by_id, get_employer_by_filter)
 
 
 class Employer(Resource):
-    def get(self):
+    def get(self, id_=None):
         try:
-            EMPLOYER_ID_SCHEMA.validate(request.json)
-        except SchemaError as e:
-            return {'status': 'SCHEMA ERROR',
-                    'err': str(e)}
+            if id_ is None:
+                (status, err, data) = get_employer_by_filter(request)
+            else:
+                (status, err, data) = get_employer_by_id(id_)
         except Exception as e:
-            return {'status': 'UNEXPECTED ERROR',
-                    'err': str(e)}
+            return {'status': 'UNEXPECTED ERROR', 'err': str(e), 'data': []}
 
-        return {'status': 'OK',
-                'data': ''}
+        return {'status': status, 'err': err, 'data': data}
 
 
 bp = Blueprint('employer', __name__)
 api = Api(bp)
-api.add_resource(Employer, '/api/employer')
+api.add_resource(Employer, '/api/employer/<int:id>',
+                           '/api/employer')

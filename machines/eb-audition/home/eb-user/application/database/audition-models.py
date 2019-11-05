@@ -16,7 +16,8 @@ from sqlalchemy.ext.declarative import declarative_base
 
 engine = create_engine(DB_URI, poolclass=QueuePool, pool_pre_ping=True,
                        pool_size=2, max_overflow=10, pool_timeout=30,
-                       pool_recycle=3600, pool_use_lifo=True)
+                       pool_recycle=3600, pool_use_lifo=True,
+                       echo=False)
 Transaction = sessionmaker(bind=engine)
 Table = declarative_base()
 Table.metadata.bind = engine
@@ -29,6 +30,11 @@ class Param(Table):
     key = Column(String(50), nullable=False, unique=True)
     value = Column(String(250), nullable=False)
 
+    def to_dict(self):
+        return {'id': self.id,
+                'key': self.key,
+                'value': self.value}
+
 
 class Employer(Table):
     __tablename__ = 'employer'
@@ -38,6 +44,12 @@ class Employer(Table):
     passwd = Column(String(250), nullable=False)
     active = Column(Boolean, nullable=False, index=True,
                     default=True, server_default=text('TRUE'))
+
+    def to_dict(self):
+        return {'id': self.id,
+                'email': self.email,
+                'passwd': self.passwd,
+                'active': self.active}
 
 
 class Job(Table):
@@ -53,3 +65,10 @@ class Job(Table):
     title = Column(String(250), nullable=False)
     active = Column(Boolean, nullable=False, index=True,
                     default=True, server_default=text('TRUE'))
+
+    def to_dict(self):
+        return {'id': self.id,
+                'employer_id': self.employer_id,
+                'employer': self.employer.email,
+                'title': self.title,
+                'active': self.active}

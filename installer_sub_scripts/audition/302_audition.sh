@@ -139,6 +139,7 @@ lxc-attach -n $MACH -- \
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
+     apt-get install -y git
      apt-get install -y ffmpeg"
 
 # redis

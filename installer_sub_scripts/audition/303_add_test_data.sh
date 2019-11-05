@@ -24,8 +24,8 @@ then
     echo "No permission to create the database. Skipped..."
     echo
     echo "Please unset DONT_RUN_DATABASE in $APP_CONFIG"
-    echo "if you want to create a database container and "
-    echo "to add the test data"
+    echo "if you want to create/recreate the database container"
+    echo "and to add the test data"
 elif [ "$DATABASE_SKIPPED" = true ]
 then
     echo "This is not a newly created database. Skipped..."

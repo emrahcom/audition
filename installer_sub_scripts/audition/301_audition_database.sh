@@ -39,6 +39,8 @@ echo "-------------------------- $MACH --------------------------"
 EXISTS=$(lxc-info -n $MACH | egrep '^State' || true)
 if [ -n "$EXISTS" -a "$REINSTALL_DATABASE_IF_EXISTS" != true ]
 then
+    echo DATABASE_SKIPPED=true >> $INSTALLER/000_source
+
     echo "Already installed. Skipped..."
     echo
     echo "Please set REINSTALL_DATABASE_IF_EXISTS in $APP_CONFIG"

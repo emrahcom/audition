@@ -64,20 +64,24 @@ then
     exit
 fi
 
+[ "root" = "$(whoami)" ] && systemctl stop uwsgi.service
 mkdir -p $PRODUCTION_BASE/$APP-backup
 mv $PRODUCTION_BASE/$APP $PRODUCTION_BASE/$APP-backup/$APP-$DATE
 mv $APP_BASE/$APP $PRODUCTION_BASE/
+[ "root" = "$(whoami)" ] && systemctl start uwsgi.service
 
 # -----------------------------------------------------------------------------
 # REMINDER
 # -----------------------------------------------------------------------------
-echo
-echo "------------------------ REMINDER ------------------------"
-echo "Don't forget to restart UWSGI service."
-echo
-echo "  systemctl restart uwsgi.service"
-echo
-echo "----------------------------------------------------------"
+[ "root" != "$(whoami)" ] && cat << EOF
+
+------------------------ REMINDER ------------------------
+Don't forget to restart UWSGI service."
+
+      systemctl restart uwsgi.service"
+
+----------------------------------------------------------
+EOF
 
 # -----------------------------------------------------------------------------
 # INSTALLATION DURATION

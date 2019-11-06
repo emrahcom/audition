@@ -1,6 +1,17 @@
 #!/bin/bash
 set -e
 
+function on_exit {
+    if [ "$FINISHED" != true ]
+    then
+        echo
+	echo "Not ready to update. Canceled!"
+    fi
+}
+
+trap on_exit EXIT
+FINISHED=false
+
 # -----------------------------------------------------------------------------
 # AUDITION-UPDATE.SH
 # -----------------------------------------------------------------------------

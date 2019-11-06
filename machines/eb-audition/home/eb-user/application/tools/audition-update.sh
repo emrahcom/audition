@@ -34,8 +34,8 @@ git clone --depth=1 -b $APP_BRANCH $APP_REPO $APP_TMP_DIR
 # -----------------------------------------------------------------------------
 # the application config
 echo "Checking the application config..."
-diff -I 'SECRET_KEY' $PRODUCTION_BASE/config/audition.conf \
-    $APP_BASE/config/audition.conf
+diff -I 'SECRET_KEY' $PRODUCTION_BASE/config/audition-flask.conf \
+    $APP_BASE/config/audition-flask.conf
 
 # the application globals
 echo "Checking the application globals..."

@@ -18,7 +18,7 @@ APP="audition"
 START_TIME=$(date +%s)
 DATE=$(date +"%Y%m%d%H%M%S")
 BASEDIR=$(pwd)
-PRODUCTION_BASE="$BASEDIR/../"
+PRODUCTION_BASE="$BASEDIR/.."
 
 # -----------------------------------------------------------------------------
 # CLONING THE GIT REPO

@@ -4,10 +4,11 @@ set -e
 # -----------------------------------------------------------------------------
 # AUDITION-UPDATE.SH
 # -----------------------------------------------------------------------------
-# Update the application from the repository.
+# Update the application from the git repository.
+# Run as root or restart the UWSGI service after update.
 #
 # Usage:
-#     bash update.sh
+#     bash audition-update.sh
 # -----------------------------------------------------------------------------
 APP_REPO="https://github.com/emrahcom/audition.git"
 APP_BRANCH="master"
@@ -64,11 +65,22 @@ then
     exit
 fi
 
-[ "root" = "$(whoami)" ] && systemctl stop uwsgi.service
+if [ "root" = "$(whoami)" ]
+then
+    echo "Stopping the UWSGI service..."
+    systemctl stop uwsgi.service
+fi
+
+echo "Updating the application folder..."
 mkdir -p $PRODUCTION_BASE/$APP-backup
 mv $PRODUCTION_BASE/$APP $PRODUCTION_BASE/$APP-backup/$APP-$DATE
 mv $APP_BASE/$APP $PRODUCTION_BASE/
-[ "root" = "$(whoami)" ] && systemctl start uwsgi.service
+
+if [ "root" = "$(whoami)" ]
+then
+    echo "Starting the UWSGI service..."
+    systemctl start uwsgi.service
+fi
 
 # -----------------------------------------------------------------------------
 # REMINDER
@@ -90,4 +102,4 @@ END_TIME=$(date +%s)
 DURATION=$(date -u -d "0 $END_TIME seconds - $START_TIME seconds" +"%H:%M:%S")
 
 echo
-echo Installation Duration: $DURATION
+echo Update Duration: $DURATION

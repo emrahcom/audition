@@ -133,3 +133,6 @@ DURATION=$(date -u -d "0 $END_TIME seconds - $START_TIME seconds" +"%H:%M:%S")
 
 echo
 echo Update Duration: $DURATION
+
+# finished without any problem.
+FINISHED=true

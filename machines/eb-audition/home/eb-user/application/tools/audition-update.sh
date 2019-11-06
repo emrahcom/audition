@@ -52,6 +52,14 @@ echo "Checking the application UWSGI settings..."
 diff $PRODUCTION_BASE/uwsgi/audition-uwsgi.ini \
     $APP_BASE/uwsgi/audition-uwsgi.ini
 
+# the Python packages
+echo "Checking the Python packages..."
+for p in $(cat $APP_BASE/audition/requirements.txt)
+do
+    echo "  $p..."
+    pip3 show $p >/dev/null
+done
+
 # the application database
 echo "Checking the application database..."
 diff $PRODUCTION_BASE/database/ $APP_BASE/database/

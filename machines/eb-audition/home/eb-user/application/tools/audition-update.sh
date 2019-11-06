@@ -75,6 +75,7 @@ then
     systemctl stop uwsgi.service
 fi
 
+# update the application folder
 echo "Updating the application folder..."
 mkdir -p $PRODUCTION_BASE/$APP-backup
 mv $PRODUCTION_BASE/$APP $PRODUCTION_BASE/$APP-backup/$APP-$DATE

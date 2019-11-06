@@ -73,7 +73,7 @@ fi
 
 echo "Updating the application folder..."
 mkdir -p $PRODUCTION_BASE/$APP-backup-as-$USER
-mv $PRODUCTION_BASE/$APP $PRODUCTION_BASE/$APP-backup-as$USER/$APP-$DATE
+mv $PRODUCTION_BASE/$APP $PRODUCTION_BASE/$APP-backup-as-$USER/$APP-$DATE
 mv $APP_BASE/$APP $PRODUCTION_BASE/
 
 if [ "root" = "$(whoami)" ]

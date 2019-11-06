@@ -32,6 +32,10 @@ git clone --depth=1 -b $APP_BRANCH $APP_REPO $APP_TMP_DIR
 # -----------------------------------------------------------------------------
 # CHECK
 # -----------------------------------------------------------------------------
+# the application tools
+echo "Checking the application tools..."
+diff $PRODUCTION_BASE/tools/ $APP_BASE/tools/
+
 # the application config
 echo "Checking the application config..."
 diff -I 'SECRET_KEY' $PRODUCTION_BASE/config/audition-flask.conf \
@@ -51,10 +55,6 @@ diff $PRODUCTION_BASE/uwsgi/audition-uwsgi.ini \
 # the application database
 echo "Checking the application database..."
 diff $PRODUCTION_BASE/database/ $APP_BASE/database/
-
-# the application tools
-echo "Checking the application tools..."
-diff $PRODUCTION_BASE/tools/ $APP_BASE/tools/
 
 # -----------------------------------------------------------------------------
 # UPDATE APPLICATION

@@ -7,7 +7,7 @@ set -e
 # Update the application from the git repository.
 #
 # Always use the "root" account or the normal user account but don't mix.
-# Don't forget to restart the UWSGI service after update if it's not root.
+# Don't forget to restart the UWSGI service after update if this is not root.
 #
 # Usage:
 #     bash audition-update.sh
@@ -59,6 +59,7 @@ diff $PRODUCTION_BASE/tools/ $APP_BASE/tools/
 # -----------------------------------------------------------------------------
 # UPDATE APPLICATION
 # -----------------------------------------------------------------------------
+# if there is no new application folder, stop
 if [ ! -d "$APP_BASE/$APP" ] 
 then
     echo
@@ -67,6 +68,7 @@ then
     exit
 fi
 
+# stop the uwsgi service if this is root
 if [ "root" = "$(whoami)" ]
 then
     echo "Stopping the UWSGI service..."
@@ -77,7 +79,13 @@ echo "Updating the application folder..."
 mkdir -p $PRODUCTION_BASE/$APP-backup
 mv $PRODUCTION_BASE/$APP $PRODUCTION_BASE/$APP-backup/$APP-$DATE
 mv $APP_BASE/$APP $PRODUCTION_BASE/
+if [ "root" = "$(whoami)" ]
+then
+    chown eb-user:eb-user $PRODUCTION_BASE/$APP -R
+    chown eb-user:eb-user $PRODUCTION_BASE/$APP-backup -R
+fi
 
+# start the uwsgi service if this is root
 if [ "root" = "$(whoami)" ]
 then
     echo "Starting the UWSGI service..."

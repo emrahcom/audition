@@ -11,7 +11,7 @@ set -e
 # -----------------------------------------------------------------------------
 APP_REPO="https://github.com/emrahcom/audition.git"
 APP_BRANCH="master"
-APP_TMP_DIR="/tmp/eb_tmp"
+APP_TMP_DIR="/tmp/$USER/eb_tmp"
 APP_BASE="$APP_TMP_DIR/machines/eb-audition/home/eb-user/application"
 APP="audition"
 

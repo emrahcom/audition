@@ -1,17 +1,6 @@
 #!/bin/bash
 set -e
 
-function on_exit {
-    if [ "$FINISHED" != true ]
-    then
-        echo
-	echo "Not ready to update. Canceled!"
-    fi
-}
-
-trap on_exit EXIT
-FINISHED=false
-
 # -----------------------------------------------------------------------------
 # AUDITION-UPDATE.SH
 # -----------------------------------------------------------------------------
@@ -23,6 +12,16 @@ FINISHED=false
 # Usage:
 #     bash audition-update.sh
 # -----------------------------------------------------------------------------
+function on_exit {
+    if [ "$FINISHED" != true ]
+    then
+        echo
+	echo "Something goes wrong or not ready to update. Canceled!"
+    fi
+}
+trap on_exit EXIT
+FINISHED=false
+
 APP_REPO="https://github.com/emrahcom/audition.git"
 APP_BRANCH="master"
 APP_TMP_DIR="/tmp/$USER/eb_tmp"

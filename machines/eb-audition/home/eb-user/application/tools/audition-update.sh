@@ -5,7 +5,9 @@ set -e
 # AUDITION-UPDATE.SH
 # -----------------------------------------------------------------------------
 # Update the application from the git repository.
-# Run as root or restart the UWSGI service after update.
+#
+# Always use the "root" account or the normal user account but don't mix.
+# Don't forget to restart the UWSGI service after update if it's not root.
 #
 # Usage:
 #     bash audition-update.sh
@@ -72,8 +74,8 @@ then
 fi
 
 echo "Updating the application folder..."
-mkdir -p $PRODUCTION_BASE/$APP-backup-as-$USER
-mv $PRODUCTION_BASE/$APP $PRODUCTION_BASE/$APP-backup-as-$USER/$APP-$DATE
+mkdir -p $PRODUCTION_BASE/$APP-backup
+mv $PRODUCTION_BASE/$APP $PRODUCTION_BASE/$APP-backup/$APP-$DATE
 mv $APP_BASE/$APP $PRODUCTION_BASE/
 
 if [ "root" = "$(whoami)" ]

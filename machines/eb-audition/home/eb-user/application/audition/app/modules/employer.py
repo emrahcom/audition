@@ -1,4 +1,5 @@
 from app.models import Transaction, Employer
+from sqlalchemy.orm.exc import UnmappedInstanceError
 
 
 def get_employer_by_id(id_):
@@ -7,8 +8,8 @@ def get_employer_by_id(id_):
         employer = trans.query(Employer).get(id_)
 
         return ('ok', '', [employer.to_dict()])
-    except AttributeError:
-        return ('ok', '', [])
+    except AttributeError as e:
+        return ('ok', '{}: {}'.format(e.__class__.__name__, e), [])
     except Exception as e:
         return ('err', '{}: {}'.format(e.__class__.__name__, e), [])
 
@@ -26,11 +27,11 @@ def get_employer_by_filter(req):
 def delete_employer_by_id(id_):
     try:
         trans = Transaction()
-        trans.query(Employer).get(id_).delete()
+        trans.delete(trans.query(Employer).get(id_))
         trans.commit()
 
         return ('ok', '')
-    except AttributeError:
-        return ('ok', 'not found')
+    except UnmappedInstanceError as e:
+        return ('ok', '{}: {}'.format(e.__class__.__name__, e))
     except Exception as e:
         return ('err', '{}: {}'.format(e.__class__.__name__, e))

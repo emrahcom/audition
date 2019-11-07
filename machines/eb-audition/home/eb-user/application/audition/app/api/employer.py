@@ -1,9 +1,13 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
+from app.api._internal import login_required, role_required
 from app.modules.employer import (get_employer_by_id, get_employer_by_filter)
 
 
 class Employer(Resource):
+
+    @login_required
+    @role_required('admin')
     def get(self, id_=None):
         try:
             if id_ is None:

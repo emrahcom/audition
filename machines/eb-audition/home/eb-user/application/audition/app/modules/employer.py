@@ -21,3 +21,14 @@ def get_employer_by_filter(req):
         return ('ok', '', [e.to_dict() for e in employer])
     except Exception as e:
         return ('err', '{}: {}'.format(e.__class__.__name__, e), [])
+
+
+def delete_employer_by_id(id_):
+    try:
+        trans = Transaction()
+        trans.query(Employer).get(id_).delete()
+        trans.commit()
+
+        return ('ok', '')
+    except Exception as e:
+        return ('err', '{}: {}'.format(e.__class__.__name__, e))

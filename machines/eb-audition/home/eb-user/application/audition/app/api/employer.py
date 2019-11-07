@@ -1,7 +1,8 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from app.api._internal import login_required, role_required
-from app.modules.employer import (get_employer_by_id, get_employer_by_filter)
+from app.modules.employer import (get_employer_by_id, get_employer_by_filter,
+                                  delete_employer_by_id)
 
 
 class Employer(Resource):
@@ -20,6 +21,17 @@ class Employer(Resource):
                     'data': []}
 
         return {'status': status, 'err': err, 'data': data}
+
+    @login_required
+    @role_required('user')
+    def delete(self, id_):
+        try:
+            (status, err) = delete_employer_by_id(id_)
+        except Exception as e:
+            return {'status': 'error',
+                    'err': '{}: {}'.format(e.__class__.__name__, e)}
+
+        return {'status': status, 'err': err}
 
 
 bp = Blueprint('employer', __name__)

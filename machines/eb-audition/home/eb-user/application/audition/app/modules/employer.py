@@ -30,5 +30,7 @@ def delete_employer_by_id(id_):
         trans.commit()
 
         return ('ok', '')
+    except AttributeError:
+        return ('ok', 'not found')
     except Exception as e:
         return ('err', '{}: {}'.format(e.__class__.__name__, e))

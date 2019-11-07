@@ -12,26 +12,26 @@ class Employer(Resource):
     def get(self, id_=None):
         try:
             if id_ is None:
-                (status, err, data) = get_employer_by_filter(request)
+                (status, msg, data) = get_employer_by_filter(request)
             else:
-                (status, err, data) = get_employer_by_id(id_)
+                (status, msg, data) = get_employer_by_id(id_)
         except Exception as e:
-            return {'status': 'error',
-                    'err': '{}: {}'.format(e.__class__.__name__, e),
+            return {'status': 'err',
+                    'msg': '{}: {}'.format(e.__class__.__name__, e),
                     'data': []}
 
-        return {'status': status, 'err': err, 'data': data}
+        return {'status': status, 'msg': msg, 'data': data}
 
     @login_required
     @role_required('user')
     def delete(self, id_):
         try:
-            (status, err) = delete_employer_by_id(id_)
+            (status, msg) = delete_employer_by_id(id_)
         except Exception as e:
-            return {'status': 'error',
-                    'err': '{}: {}'.format(e.__class__.__name__, e)}
+            return {'status': 'err',
+                    'msg': '{}: {}'.format(e.__class__.__name__, e)}
 
-        return {'status': status, 'err': err}
+        return {'status': status, 'msg': msg}
 
 
 bp = Blueprint('employer', __name__)

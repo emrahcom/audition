@@ -7,7 +7,7 @@ from app.modules.employer import (get_employer_by_id, get_employer_by_filter)
 class Employer(Resource):
 
     @login_required
-    @role_required('admin')
+    @role_required('user')
     def get(self, id_=None):
         try:
             if id_ is None:

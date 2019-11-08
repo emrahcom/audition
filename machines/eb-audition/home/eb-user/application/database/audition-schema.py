@@ -8,8 +8,6 @@
 #     ln -s ../../database/audition-schema.py schema.py
 # -----------------------------------------------------------------------------
 
-from schema import Schema
+from schema import Schema, Use, And
 
-ID_SCH = Schema({
-    'id': int
-})
+ID_SCH = Schema(And(Use(int), lambda n: n > 0))

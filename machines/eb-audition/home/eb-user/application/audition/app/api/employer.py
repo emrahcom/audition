@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from app.api._internal import login_required, role_required
+from app.schema import ID_SCH
 from app.modules.employer import (get_employer_by_id, get_employer_by_filter,
                                   delete_employer_by_id)
 
@@ -11,7 +12,7 @@ class EmployerById(Resource):
     @role_required('user')
     def get(self, id_):
         try:
-            (status, msg, data) = get_employer_by_id(id_)
+            (status, msg, data) = get_employer_by_id(ID_SCH.validate(id_))
         except Exception as e:
             return {'status': 'err',
                     'msg': '{}: {}'.format(e.__class__.__name__, e),
@@ -23,7 +24,7 @@ class EmployerById(Resource):
     @role_required('user')
     def delete(self, id_):
         try:
-            (status, msg) = delete_employer_by_id(id_)
+            (status, msg) = delete_employer_by_id(ID_SCH.validate(id_))
         except Exception as e:
             return {'status': 'err',
                     'msg': '{}: {}'.format(e.__class__.__name__, e)}

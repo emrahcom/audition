@@ -37,7 +37,7 @@ def delete_employer_by_id(id_):
         return ('err', '{}: {}'.format(e.__class__.__name__, e))
 
 
-def update_employer(req):
+def update_employer(id_, req):
     try:
         trans = Transaction()
         trans.commit()

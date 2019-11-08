@@ -13,7 +13,6 @@ from schema import Schema, Use, And, Optional
 ID_SCH = Schema(And(Use(int), lambda n: n > 0))
 
 EMPLOYER_UPDATE_SCH = Schema({
-    'id': And(Use(int), lambda n: n > 0),
     Optional('email'): And(str, Use(str.lower)),
     Optional('passwd'): And(str, lambda s: len(s) > 6),
     Optional('active'): bool})

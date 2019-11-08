@@ -36,7 +36,7 @@ class EmployerById(Resource):
     def post(self, id_):
         try:
             req = EMPLOYER_UPDATE_SCH.validate(request.json)
-            (status, msg) = update_employer(req)
+            (status, msg) = update_employer(ID_SCH.validate(id_), req)
         except Exception as e:
             return {'status': 'err',
                     'msg': '{}: {}'.format(e.__class__.__name__, e)}

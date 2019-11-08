@@ -14,7 +14,7 @@
 # -----------------------------------------------------------------------------
 BASEDIR=$(dirname $0)
 
-for f in $(find $BASEDIR/../ -name '*.py')
+for f in $(find $BASEDIR/../ -name '*.py' | grep -v '/audition-backup/')
 do
     echo $f
     flake8 $f

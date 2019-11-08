@@ -35,3 +35,15 @@ def delete_employer_by_id(id_):
         return ('ok', '{}: {}'.format(e.__class__.__name__, e))
     except Exception as e:
         return ('err', '{}: {}'.format(e.__class__.__name__, e))
+
+
+def update_employer(req):
+    try:
+        trans = Transaction()
+        trans.commit()
+
+        return ('ok', '')
+    except UnmappedInstanceError as e:
+        return ('ok', '{}: {}'.format(e.__class__.__name__, e))
+    except Exception as e:
+        return ('err', '{}: {}'.format(e.__class__.__name__, e))

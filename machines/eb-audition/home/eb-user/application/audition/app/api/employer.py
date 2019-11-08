@@ -1,9 +1,9 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from app.api._internal import login_required, role_required
-from app.schema import ID_SCH
+from app.schema import ID_SCH, EMPLOYER_UPDATE_SCH
 from app.modules.employer import (get_employer_by_id, get_employer_by_filter,
-                                  delete_employer_by_id)
+                                  delete_employer_by_id, update_employer)
 
 
 class EmployerById(Resource):
@@ -31,6 +31,18 @@ class EmployerById(Resource):
 
         return {'status': status, 'msg': msg}
 
+    @login_required
+    @role_required('user')
+    def post(self, id_):
+        try:
+            req = EMPLOYER_UPDATE_SCH.validate(request.json)
+            (status, msg) = update_employer(req)
+        except Exception as e:
+            return {'status': 'err',
+                    'msg': '{}: {}'.format(e.__class__.__name__, e)}
+
+        return {'status': status, 'msg': msg}
+
 
 class Employer(Resource):
 
@@ -38,7 +50,8 @@ class Employer(Resource):
     @role_required('user')
     def get(self):
         try:
-            (status, msg, data) = get_employer_by_filter(request)
+            req = {}
+            (status, msg, data) = get_employer_by_filter(req)
         except Exception as e:
             return {'status': 'err',
                     'msg': '{}: {}'.format(e.__class__.__name__, e),

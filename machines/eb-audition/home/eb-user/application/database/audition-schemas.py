@@ -8,12 +8,12 @@
 #     ln -s ../../database/audition-schemas.py schemas.py
 # -----------------------------------------------------------------------------
 
-from schema import Schema, Use, And, Optional
+from schema import Schema, Regex, Use, And, Optional
 
 ID_SCH = Schema(And(Use(int), lambda n: n > 0))
 
 EMPLOYER_UPDATE_SCH = Schema({
-    Optional('email'): And(str, Use(str.lower)),
-    Optional('passwd'): And(str, lambda s: len(s) > 5),
+    Optional('email'): And(str, Use(str.lower),
+                           Regex('^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9.-]+$')),
     Optional('active'): bool
 }, ignore_extra_keys=True)

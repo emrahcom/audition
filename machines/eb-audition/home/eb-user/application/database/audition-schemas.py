@@ -12,6 +12,8 @@ from schema import Schema, Regex, Use, And, Optional
 
 ID_SCH = Schema(And(Use(int), lambda n: n > 0))
 
+NON_EMPTY_DICT_SCH = Schema({str: object})
+
 EMPLOYER_UPDATE_SCH = Schema({
     Optional('email'): And(str, Use(str.lower),
                            Regex(r'^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9.-]+$')),

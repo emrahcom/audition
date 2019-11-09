@@ -24,17 +24,19 @@ def check_passwd(passwd):
 
 NON_EMPTY_DICT_SCH = Schema({str: object})
 ID_SCH = Schema(And(Use(int), lambda n: n > 0))
-PASSWD_SCH = Schema(And(str, check_passwd))
+PASSWD_SCH = Schema(And(str, check_passwd, error='Invalid password'))
 
 EMPLOYER_CREATE_SCH = Schema({
     'email': And(str, Use(str.lower),
-                 Regex(r'^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9.-]+$')),
+                 Regex(r'^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9.-]+$'),
+                 error='Invalid email'),
     'passwd': PASSWD_SCH,
     'active': bool
 }, ignore_extra_keys=True)
 
 EMPLOYER_UPDATE_SCH = Schema({
     Optional('email'): And(str, Use(str.lower),
-                           Regex(r'^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9.-]+$')),
+                           Regex(r'^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9.-]+$'),
+                           error='Invalid email'),
     Optional('active'): bool
 }, ignore_extra_keys=True)

@@ -4,7 +4,8 @@ from app.api._internal import login_required, role_required
 from app.schemas import (ID_SCH, NON_EMPTY_DICT_SCH, EMPLOYER_UPDATE_SCH,
                          EMPLOYER_CREATE_SCH)
 from app.modules.employer import (get_employer_by_id, get_employer_by_filter,
-                                  delete_employer_by_id, update_employer)
+                                  delete_employer_by_id, update_employer,
+                                  create_employer)
 
 
 class EmployerById(Resource):

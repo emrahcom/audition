@@ -48,6 +48,7 @@ def update_employer(id_, req):
 def create_employer(req):
     try:
         trans = Transaction()
+        n = 0
         trans.commit()
 
         return ('ok', str(n))

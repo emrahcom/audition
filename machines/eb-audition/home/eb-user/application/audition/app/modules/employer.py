@@ -27,10 +27,10 @@ def get_employer_by_filter(req):
 def delete_employer_by_id(id_):
     try:
         trans = Transaction()
-        trans.query(Employer).filter(Employer.id == id_).delete()
+        n = trans.query(Employer).filter(Employer.id == id_).delete()
         trans.commit()
 
-        return ('ok', '')
+        return ('ok', str(n))
     except Exception as e:
         return ('err', '{}: {}'.format(e.__class__.__name__, e))
 
@@ -38,9 +38,9 @@ def delete_employer_by_id(id_):
 def update_employer(id_, req):
     try:
         trans = Transaction()
-        trans.query(Employer).filter(Employer.id == id_).update(req)
+        n = trans.query(Employer).filter(Employer.id == id_).update(req)
         trans.commit()
 
-        return ('ok', '')
+        return ('ok', str(n))
     except Exception as e:
         return ('err', '{}: {}'.format(e.__class__.__name__, e))

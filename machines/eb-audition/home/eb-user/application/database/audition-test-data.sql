@@ -2,11 +2,15 @@
 -- AUDITION-TEST-DATA.SQL
 -- ----------------------------------------------------------------------------
 -- This script adds the application test data.
+-- It deletes all records before to add the test data. Therefore be careful!
 -- Tested on Postgresql 11.
 --
--- Usage:
+-- Usages:
 --     psql -l postgres -c \
 --             "psql -d audition -e -f /tmp/audition-test-data.sql"
+--
+--     psql -U audition -d audition -h eb-audition-db -e \
+--          -f audition-test-data.sql
 -- ----------------------------------------------------------------------------
 
 BEGIN;
@@ -14,6 +18,8 @@ BEGIN;
 -- ----------------------------------------------------------------------------
 -- EMPLOYER
 -- ----------------------------------------------------------------------------
+DELETE FROM employer;
+ALTER SEQUENCE employer_id_seq RESTART;
 INSERT INTO employer VALUES
     (DEFAULT, 'acc1@mydomain.com', '1111', TRUE),
     (DEFAULT, 'acc2@mydomain.com', '2222', TRUE),
@@ -23,6 +29,8 @@ INSERT INTO employer VALUES
 -- ----------------------------------------------------------------------------
 -- JOB
 -- ----------------------------------------------------------------------------
+DELETE FROM job;
+ALTER SEQUENCE job_id_seq RESTART;
 INSERT INTO job VALUES
     (DEFAULT, 1, 'title1', TRUE),
     (DEFAULT, 1, 'title2', TRUE),

@@ -211,7 +211,7 @@ rsync -aChu home/eb-user/application/ $ROOTFS/home/eb-user/application/
 # the application key
 SECRET_KEY=$(pwgen -AB 20 1)
 sed -i "s/###SECRET-KEY###/$SECRET_KEY/" \
-    $ROOTFS/home/eb-user/application/config/audition.conf
+    $ROOTFS/home/eb-user/application/config/audition-flask.conf
 
 # the application database password
 DB_PASSWD=$(pwgen -AB 12 1)

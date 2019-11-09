@@ -30,7 +30,7 @@ APP="audition"
 
 START_TIME=$(date +%s)
 DATE=$(date +"%Y%m%d%H%M%S")
-BASEDIR=$(pwd)
+BASEDIR=$(dirname $0)
 PRODUCTION_BASE="$BASEDIR/.."
 
 # -----------------------------------------------------------------------------

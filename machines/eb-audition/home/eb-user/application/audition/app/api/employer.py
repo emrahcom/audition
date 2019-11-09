@@ -17,7 +17,7 @@ class EmployerById(Resource):
             (status, msg, data) = get_employer_by_id(ID_SCH.validate(id_))
         except Exception as e:
             return {'status': 'err',
-                    'msg': '{}: {}'.format(e.__class__.__name__, e),
+                    'msg': e.__class__.__name__,
                     'data': []}
 
         return {'status': status, 'msg': msg, 'data': data}
@@ -26,12 +26,13 @@ class EmployerById(Resource):
     @role_required('user')
     def delete(self, id_):
         try:
-            (status, msg) = delete_employer_by_id(ID_SCH.validate(id_))
+            (status, msg, count) = delete_employer_by_id(ID_SCH.validate(id_))
         except Exception as e:
             return {'status': 'err',
-                    'msg': '{}: {}'.format(e.__class__.__name__, e)}
+                    'msg': e.__class__.__name__,
+                    'count': 0}
 
-        return {'status': status, 'msg': msg}
+        return {'status': status, 'msg': msg, 'count': count}
 
     @login_required
     @role_required('user')
@@ -40,12 +41,13 @@ class EmployerById(Resource):
             req = EMPLOYER_UPDATE_SCH.validate(request.json)
             NON_EMPTY_DICT_SCH.validate(req)
 
-            (status, msg) = update_employer(ID_SCH.validate(id_), req)
+            (status, msg, count) = update_employer(ID_SCH.validate(id_), req)
         except Exception as e:
             return {'status': 'err',
-                    'msg': '{}: {}'.format(e.__class__.__name__, e)}
+                    'msg': e.__class__.__name__,
+                    'count': 0}
 
-        return {'status': status, 'msg': msg}
+        return {'status': status, 'msg': msg, 'count': count}
 
 
 class Employer(Resource):
@@ -58,7 +60,7 @@ class Employer(Resource):
             (status, msg, data) = get_employer_by_filter(req)
         except Exception as e:
             return {'status': 'err',
-                    'msg': '{}: {}'.format(e.__class__.__name__, e),
+                    'msg': e.__class__.__name__,
                     'data': []}
 
         return {'status': status, 'msg': msg, 'data': data}
@@ -72,7 +74,7 @@ class Employer(Resource):
             (status, msg, id_) = create_employer(req)
         except Exception as e:
             return {'status': 'err',
-                    'msg': '{}: {}'.format(e.__class__.__name__, e),
+                    'msg': e.__class__.__name__,
                     'id': None}
 
         return {'status': status, 'msg': msg, 'id': id_}

@@ -14,6 +14,6 @@ ID_SCH = Schema(And(Use(int), lambda n: n > 0))
 
 EMPLOYER_UPDATE_SCH = Schema({
     Optional('email'): And(str, Use(str.lower),
-                           Regex('^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9.-]+$')),
+                           Regex(r'^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9.-]+$')),
     Optional('active'): bool
 }, ignore_extra_keys=True)

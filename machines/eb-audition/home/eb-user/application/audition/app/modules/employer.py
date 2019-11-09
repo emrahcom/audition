@@ -1,5 +1,4 @@
 from app.models import Transaction, Employer
-from sqlalchemy.orm.exc import UnmappedInstanceError
 
 
 def get_employer_by_id(id_):

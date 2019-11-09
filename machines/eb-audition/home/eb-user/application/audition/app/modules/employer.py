@@ -48,9 +48,10 @@ def update_employer(id_, req):
 def create_employer(req):
     try:
         trans = Transaction()
-        n = 0
+        employer = Employer(**req)
+        trans.add(employer)
         trans.commit()
 
-        return ('ok', str(n))
+        return ('ok', '', employer.id)
     except Exception as e:
-        return ('err', '{}: {}'.format(e.__class__.__name__, e))
+        return ('err', '{}: {}'.format(e.__class__.__name__, e), None)

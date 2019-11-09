@@ -69,12 +69,13 @@ class Employer(Resource):
         try:
             req = EMPLOYER_CREATE_SCH.validate(request.json)
 
-            (status, msg) = create_employer(req)
+            (status, msg, id_) = create_employer(req)
         except Exception as e:
             return {'status': 'err',
-                    'msg': '{}: {}'.format(e.__class__.__name__, e)}
+                    'msg': '{}: {}'.format(e.__class__.__name__, e),
+                    'id': None}
 
-        return {'status': status, 'msg': msg}
+        return {'status': status, 'msg': msg, 'id': id_}
 
 
 bp = Blueprint('employer', __name__)

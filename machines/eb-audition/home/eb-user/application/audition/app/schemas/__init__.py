@@ -15,6 +15,6 @@ def check_passwd(passwd):
         return False
 
 
-ID_SCH = Schema(And(Use(int), lambda n: n > 0))
-PASSWD_SCH = Schema(And(str, check_passwd, error='Invalid password'))
-NON_EMPTY_DICT_SCH = Schema({str: object})
+ID = Schema(And(Use(int), lambda n: n > 0))
+PASSWD = Schema(And(str, check_passwd, error='Invalid password'))
+NON_EMPTY_DICT = Schema({str: object})

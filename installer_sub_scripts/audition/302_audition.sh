@@ -34,6 +34,11 @@ nft delete element eb-nat tcp2ip { 443 } 2>/dev/null || true
 nft add element eb-nat tcp2ip { 443 : $IP }
 nft delete element eb-nat tcp2port { 443 } 2>/dev/null || true
 nft add element eb-nat tcp2port { 443 : 443 }
+# npm server
+nft delete element eb-nat tcp2ip { 8081 } 2>/dev/null || true
+nft add element eb-nat tcp2ip { 8081 : $IP }
+nft delete element eb-nat tcp2port { 8081 } 2>/dev/null || true
+nft add element eb-nat tcp2port { 8081 : 8081 }
 
 # -----------------------------------------------------------------------------
 # INIT
@@ -169,6 +174,15 @@ lxc-attach -n $MACH -- \
      pip3 install redis requests schema
      pip3 install SQLAlchemy psycopg2"
 
+# javascript
+lxc-attach -n $MACH -- \
+    zsh -c \
+    "export DEBIAN_FRONTEND=noninteractive
+     apt-get install -y npm"
+lxc-attach -n $MACH -- \
+    zsh -c \
+    "npm install -g @vue/cli"
+
 # web
 lxc-attach -n $MACH -- \
     zsh -c \
@@ -222,6 +236,15 @@ lxc-attach -n eb-audition-db -- \
     zsh -c \
     "echo ALTER ROLE audition WITH ENCRYPTED PASSWORD \'$DB_PASSWD\' | \
      su -l postgres -c psql"
+
+# vue.js
+lxc-attach -n $MACH -- \
+    su -l eb-user -c \
+    "cd application/ui
+     mv audition-ui audition-ui.bck
+     vue create -d audition-ui
+     rsync -avh audition-ui.bck/ audition-ui/
+     rm -rf audition-ui.bck"
 
 # the ownership
 lxc-attach -n $MACH -- chown eb-user:eb-user /home/eb-user/application -R

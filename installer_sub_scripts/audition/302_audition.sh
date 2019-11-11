@@ -178,7 +178,8 @@ lxc-attach -n $MACH -- \
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
-     apt-get install -y npm"
+     curl -sL https://deb.nodesource.com/setup_13.x | bash -
+     apt-get install -y nodejs"
 lxc-attach -n $MACH -- \
     zsh -c \
     "npm install -g @vue/cli"

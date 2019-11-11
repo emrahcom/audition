@@ -240,8 +240,8 @@ lxc-attach -n eb-audition-db -- \
 
 # vue.js
 lxc-attach -n $MACH -- \
-    su -l eb-user -c \
-    "cd application/ui
+    zsh -c \
+    "cd /home/eb-user/application/ui
      mv audition-ui audition-ui.bck
      vue create -d audition-ui
      rsync -avh audition-ui.bck/ audition-ui/

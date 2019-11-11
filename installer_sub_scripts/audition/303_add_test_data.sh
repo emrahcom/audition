@@ -27,6 +27,8 @@ then
     echo "Please unset DONT_RUN_DATABASE in $APP_CONFIG"
     echo "if you want to create/recreate the database container"
     echo "and to add the test data"
+
+    exit
 elif [ "$DATABASE_SKIPPED" = true ]
 then
     echo "This is not a newly created database. Skipped..."
@@ -34,6 +36,8 @@ then
     echo "Please set REINSTALL_DATABASE_IF_EXISTS in $APP_CONFIG"
     echo "if you want to recreate a new database container and "
     echo "to add the test data"
+
+    exit
 fi
 
 # -----------------------------------------------------------------------------

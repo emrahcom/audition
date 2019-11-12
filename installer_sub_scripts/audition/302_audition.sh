@@ -178,7 +178,7 @@ lxc-attach -n $MACH -- \
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
-     curl -sL https://deb.nodesource.com/setup_13.x | bash -
+     curl -sL https://deb.nodesource.com/setup_12.x | bash -
      apt-get install -y nodejs"
 lxc-attach -n $MACH -- \
     zsh -c \

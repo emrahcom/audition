@@ -36,7 +36,7 @@ class EmployerById(Resource):
 
     @login_required
     @role_required('user')
-    def post(self, id_):
+    def put(self, id_):
         try:
             req = scm.EMPLOYER_UPDATE.validate(request.json)
             sch.NON_EMPTY_DICT.validate(req)
@@ -67,7 +67,7 @@ class Employer(Resource):
 
     @login_required
     @role_required('user')
-    def put(self):
+    def post(self):
         try:
             req = scm.EMPLOYER_CREATE.validate(request.json)
 

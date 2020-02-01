@@ -11,3 +11,4 @@
 - audi alımı blockchain'den olabilir
 - işveren olmak onaylı veya yüksek maliyetli. sadece gerçek olanlar gelmeli
 - başvuran, cast ajans veya kişi olabilir
+- aynı ilanı veren işverenler problemi... öylese ancak cast manager ilan verebilir

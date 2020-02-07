@@ -130,34 +130,35 @@ cp etc/apt/sources.list.d/multimedia.list $ROOTFS/etc/apt/sources.list.d/
 lxc-attach -n $MACH -- \
     zsh -c \
     "apt-get $APT_PROXY_OPTION -oAcquire::AllowInsecureRepositories=true update
-     sleep 3
+     sync
      apt-get $APT_PROXY_OPTION --allow-unauthenticated -y install \
              deb-multimedia-keyring"
 
 # update
 lxc-attach -n $MACH -- \
     zsh -c \
-    "apt-get $APT_PROXY_OPTION update
+    "apt-get $APT_PROXY_OPTION update && sleep 3
      apt-get $APT_PROXY_OPTION -y dist-upgrade"
 
 # utils
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
-     apt-get install -y git
-     apt-get install -y ffmpeg"
+     apt-get $APT_PROXY_OPTION -y install git
+     apt-get $APT_PROXY_OPTION -y install ffmpeg"
 
 # redis
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
-     apt-get install -y redis-server"
+     apt-get $APT_PROXY_OPTION -y install redis-server"
 
 # postgresql-client
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
-     apt-get install -y postgresql-client --install-recommends"
+     apt-get $APT_PROXY_OPTION -y install postgresql-client \
+             --install-recommends"
 
 # python3
 lxc-attach -n $MACH -- \
@@ -179,7 +180,7 @@ lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
      curl -sL https://deb.nodesource.com/setup_12.x | bash -
-     apt-get install -y nodejs"
+     apt-get $APT_PROXY_OPTION -y install nodejs"
 lxc-attach -n $MACH -- \
     zsh -c \
     "npm install -g @vue/cli"
@@ -188,7 +189,7 @@ lxc-attach -n $MACH -- \
 lxc-attach -n $MACH -- \
     zsh -c \
     "export DEBIAN_FRONTEND=noninteractive
-     apt-get install -y ssl-cert ca-certificates certbot
+     apt-get $APT_PROXY_OPTION -y install ssl-cert ca-certificates certbot
      apt-get $APT_PROXY_OPTION -y install nginx-extras
      apt-get $APT_PROXY_OPTION -y install uwsgi uwsgi-plugin-python3"
 

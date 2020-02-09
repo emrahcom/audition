@@ -35,6 +35,7 @@ ALTER TABLE param OWNER TO audition;
 -- id                   : the record id
 -- email                : the email address
 -- passwd               : the pasword hash
+-- created_at
 -- active               : is the record active?
 -- ----------------------------------------------------------------------------
 CREATE TABLE employer (
@@ -46,6 +47,17 @@ CREATE TABLE employer (
 CREATE INDEX ON employer("active");
 ALTER TABLE employer OWNER TO audition;
 -- ----------------------------------------------------------------------------
+-- PERFORMER
+-- ----------------------------------------------------------------------------
+-- This table stores the performer base data.
+--
+-- id                   : the record id
+-- email                : the email address
+-- passwd               : the pasword hash
+-- created_at
+-- cash                 : cash as token
+-- active               : is the record active?
+-- ----------------------------------------------------------------------------
 -- JOB
 -- ----------------------------------------------------------------------------
 -- This table stores the job base data.
@@ -53,6 +65,10 @@ ALTER TABLE employer OWNER TO audition;
 -- id                   : the record id
 -- employer_id          : the employer
 -- title                : the job title
+-- cost                 : the cost of the request as token
+-- status
+-- created_at
+-- updated_at
 -- active               : is the record active?
 -- ----------------------------------------------------------------------------
 CREATE TABLE job (
@@ -65,6 +81,41 @@ CREATE TABLE job (
 CREATE INDEX ON job("employer_id");
 CREATE INDEX ON job("active");
 ALTER TABLE job OWNER TO audition;
+-- ----------------------------------------------------------------------------
+-- JREQUEST
+-- ----------------------------------------------------------------------------
+-- This table stores the job request.
+--
+-- id
+-- employer_id
+-- performer_id
+-- cost
+-- status
+-- created_at
+-- updated_at
+-- active
+-- ----------------------------------------------------------------------------
+-- AUDITION
+-- ----------------------------------------------------------------------------
+-- This table stores the audition base data.
+--
+-- id
+-- job_id
+-- performer_id
+-- performance_link
+-- status
+-- created_at
+-- updated_at
+-- active
+-- ----------------------------------------------------------------------------
+-- TOKEN
+-- ----------------------------------------------------------------------------
+-- This table stores the token transaction log
+--
+-- id
+-- performer_id
+-- token
+-- exchanged_at
 -- ----------------------------------------------------------------------------
 
 COMMIT;

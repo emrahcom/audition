@@ -12,3 +12,6 @@
 - işveren olmak onaylı veya yüksek maliyetli. sadece gerçek olanlar gelmeli
 - başvuran, cast ajans veya kişi olabilir
 - aynı ilanı veren işverenler problemi... öylese ancak cast manager ilan verebilir
+- ui ve application daha keskin ayrılsın. flask altında static yok...
+- yeni kayıt 0 kontör, referansla biri gelirse 1 kntör kazandırır
+- kontör bitince yeni kayıt olmalarını engelle

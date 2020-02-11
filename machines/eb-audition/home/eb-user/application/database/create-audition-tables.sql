@@ -134,38 +134,38 @@ CREATE INDEX ON jrequest("updated_at");
 CREATE INDEX ON jrequest("active");
 ALTER TABLE jrequest OWNER TO audition;
 -- ----------------------------------------------------------------------------
--- AUDITION
+-- PERFORMANCE
 -- ----------------------------------------------------------------------------
--- This table stores the audition base data.
+-- This table stores the performance base data.
 --
 -- id                   : the record id
 -- job_id               : the job
 -- performer_id         : the performer
--- performance          : the video relative path
--- status               : the audition status
--- created_at           : the audition creation time
+-- video                : the video relative path
+-- status               : the performance status
+-- created_at           : the performance creation time
 -- updated_at           : the record update time
 -- active               : is the record active
 -- ----------------------------------------------------------------------------
-CREATE TABLE audition (
+CREATE TABLE performance (
     "id" serial NOT NULL PRIMARY KEY,
     "job_id" integer NOT NULL REFERENCES job("id")
                               ON DELETE CASCADE,
     "performer_id" integer NOT NULL REFERENCES performer("id")
                                     ON DELETE CASCADE,
-    "performance" varchar(250) NOT NULL,
+    "video" varchar(250) NOT NULL,
     "status" integer NOT NULL DEFAULT 0,
     "created_at" timestamp with time zone NOT NULL DEFAULT NOW(),
     "updated_at" timestamp with time zone NOT NULL DEFAULT NOW(),
     "active" boolean NOT NULL DEFAULT TRUE
 );
-CREATE INDEX ON audition("job_id");
-CREATE INDEX ON audition("performer_id");
-CREATE INDEX ON audition("status");
-CREATE INDEX ON audition("created_at");
-CREATE INDEX ON audition("updated_at");
-CREATE INDEX ON audition("active");
-ALTER TABLE audition OWNER TO audition;
+CREATE INDEX ON performance("job_id");
+CREATE INDEX ON performance("performer_id");
+CREATE INDEX ON performance("status");
+CREATE INDEX ON performance("created_at");
+CREATE INDEX ON performance("updated_at");
+CREATE INDEX ON performance("active");
+ALTER TABLE performance OWNER TO audition;
 -- ----------------------------------------------------------------------------
 -- TOKEN
 -- ----------------------------------------------------------------------------

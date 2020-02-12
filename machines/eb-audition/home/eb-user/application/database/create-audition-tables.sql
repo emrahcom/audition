@@ -18,14 +18,15 @@ BEGIN;
 -- This table stores the (key, value) pairs.
 --
 -- id                   : the record id
--- key                  : the param name
+-- key                  : the param name (unique)
 -- value                : the param value
 -- ----------------------------------------------------------------------------
 CREATE TABLE param (
     "id" serial NOT NULL PRIMARY KEY,
-    "key" varchar(50) NOT NULL UNIQUE,
+    "key" varchar(50) NOT NULL,
     "value" varchar(250) NOT NULL
 );
+CREATE UNIQUE INDEX ON param("key");
 ALTER TABLE param OWNER TO audition;
 -- ----------------------------------------------------------------------------
 -- EMPLOYER
@@ -33,18 +34,22 @@ ALTER TABLE param OWNER TO audition;
 -- This table stores the employer base data.
 --
 -- id                   : the record id
--- email                : the email address
+-- email                : the email address (unique)
+-- name                 : the employer name (unique)
 -- passwd               : the pasword hash
 -- created_at           : the account creation time
--- active               : is the record active
+-- active               : is active
 -- ----------------------------------------------------------------------------
 CREATE TABLE employer (
     "id" serial NOT NULL PRIMARY KEY,
-    "email" varchar(250) NOT NULL UNIQUE,
+    "email" varchar(250) NOT NULL,
+    "name" varchar(250) NOT NULL,
     "passwd" varchar(250) NOT NULL,
     "created_at" timestamp with time zone NOT NULL DEFAULT NOW(),
     "active" boolean NOT NULL DEFAULT TRUE
 );
+CREATE UNIQUE INDEX ON employer("email");
+CREATE UNIQUE INDEX ON employer("name");
 CREATE INDEX ON employer("active");
 ALTER TABLE employer OWNER TO audition;
 -- ----------------------------------------------------------------------------
@@ -53,20 +58,27 @@ ALTER TABLE employer OWNER TO audition;
 -- This table stores the performer base data.
 --
 -- id                   : the record id
--- email                : the email address
+-- email                : the email address (unique)
+-- name                 : the performer name (not unique)
 -- passwd               : the pasword hash
 -- created_at           : the account creation time
--- cash                 : cash as token
--- active               : is the record active
+-- cash                 : the cash quantity as token
+-- hidden               : is hidden
+-- active               : is active
 -- ----------------------------------------------------------------------------
 CREATE TABLE performer (
     "id" serial NOT NULL PRIMARY KEY,
-    "email" varchar(250) NOT NULL UNIQUE,
+    "email" varchar(250) NOT NULL,
+    "name" varchar(250) NOT NULL,
     "passwd" varchar(250) NOT NULL,
     "created_at" timestamp with time zone NOT NULL DEFAULT NOW(),
     "cash" integer NOT NULL DEFAULT 0,
+    "hidden" boolean NOT NULL DEFAULT FALSE,
     "active" boolean NOT NULL DEFAULT TRUE
 );
+CREATE UNIQUE INDEX ON performer("email");
+CREATE INDEX ON performer("name");
+CREATE INDEX ON performer("hidden");
 CREATE INDEX ON performer("active");
 ALTER TABLE performer OWNER TO audition;
 -- ----------------------------------------------------------------------------
@@ -81,7 +93,7 @@ ALTER TABLE performer OWNER TO audition;
 -- status               : the job status
 -- created_at           : the job creation time
 -- updated_at           : the update time
--- active               : is the record active
+-- active               : is active
 -- ----------------------------------------------------------------------------
 CREATE TABLE job (
     "id" serial NOT NULL PRIMARY KEY,
@@ -101,23 +113,23 @@ CREATE INDEX ON job("updated_at");
 CREATE INDEX ON job("active");
 ALTER TABLE job OWNER TO audition;
 -- ----------------------------------------------------------------------------
--- JREQUEST
+-- JOB_REQUEST
 -- ----------------------------------------------------------------------------
 -- This table stores the job request.
 --
 -- id                   : the record id
--- employer_id          : the employer
--- performer_id         : the performer
+-- job_id               : the job (unique part-1)
+-- performer_id         : the performer (unique part-2)
 -- cost                 : the cost of the request as token
 -- status               : the job request status
 -- created_at           : the job request creation time
 -- updated_at           : the update time
--- active               : is the record active
+-- active               : is active
 -- ----------------------------------------------------------------------------
-CREATE TABLE jrequest (
+CREATE TABLE job_request (
     "id" serial NOT NULL PRIMARY KEY,
-    "employer_id" integer NOT NULL REFERENCES employer("id")
-                                   ON DELETE CASCADE,
+    "job_id" integer NOT NULL REFERENCES job("id")
+                              ON DELETE CASCADE,
     "performer_id" integer NOT NULL REFERENCES performer("id")
                                     ON DELETE CASCADE,
     "cost" integer NOT NULL DEFAULT 0,
@@ -126,13 +138,13 @@ CREATE TABLE jrequest (
     "updated_at" timestamp with time zone NOT NULL DEFAULT NOW(),
     "active" boolean NOT NULL DEFAULT TRUE
 );
-CREATE INDEX ON jrequest("employer_id");
-CREATE INDEX ON jrequest("performer_id");
-CREATE INDEX ON jrequest("status");
-CREATE INDEX ON jrequest("created_at");
-CREATE INDEX ON jrequest("updated_at");
-CREATE INDEX ON jrequest("active");
-ALTER TABLE jrequest OWNER TO audition;
+CREATE UNIQUE INDEX ON job_request("job_id", "performer_id");
+CREATE INDEX ON job_request("performer_id");
+CREATE INDEX ON job_request("status");
+CREATE INDEX ON job_request("created_at");
+CREATE INDEX ON job_request("updated_at");
+CREATE INDEX ON job_request("active");
+ALTER TABLE job_request OWNER TO audition;
 -- ----------------------------------------------------------------------------
 -- PERFORMANCE
 -- ----------------------------------------------------------------------------
@@ -145,7 +157,8 @@ ALTER TABLE jrequest OWNER TO audition;
 -- status               : the performance status
 -- created_at           : the performance creation time
 -- updated_at           : the record update time
--- active               : is the record active
+-- public               : is public
+-- active               : is active
 -- ----------------------------------------------------------------------------
 CREATE TABLE performance (
     "id" serial NOT NULL PRIMARY KEY,
@@ -157,15 +170,27 @@ CREATE TABLE performance (
     "status" integer NOT NULL DEFAULT 0,
     "created_at" timestamp with time zone NOT NULL DEFAULT NOW(),
     "updated_at" timestamp with time zone NOT NULL DEFAULT NOW(),
+    "public" boolean NOT NULL DEFAULT FALSE,
     "active" boolean NOT NULL DEFAULT TRUE
 );
-CREATE INDEX ON performance("job_id");
+CREATE INDEX ON performance("job_id", "performer_id");
 CREATE INDEX ON performance("performer_id");
 CREATE INDEX ON performance("status");
 CREATE INDEX ON performance("created_at");
 CREATE INDEX ON performance("updated_at");
+CREATE INDEX ON performance("public");
 CREATE INDEX ON performance("active");
 ALTER TABLE performance OWNER TO audition;
+-- ----------------------------------------------------------------------------
+-- EMPLOYER_BLACKLIST
+-- ----------------------------------------------------------------------------
+-- (employer, performer)
+-- ----------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------
+-- PERFORMER_BLACKLIST
+-- ----------------------------------------------------------------------------
+-- (performer, employer)
+-- ----------------------------------------------------------------------------
 -- ----------------------------------------------------------------------------
 -- TOKEN
 -- ----------------------------------------------------------------------------
@@ -175,7 +200,7 @@ ALTER TABLE performance OWNER TO audition;
 -- performer_id         : the performer
 -- token                : the token quantity
 -- exchanged_at         : the exchange time
--- active               : is the record active
+-- active               : is active
 -- ----------------------------------------------------------------------------
 CREATE TABLE token (
     "id" serial NOT NULL PRIMARY KEY,

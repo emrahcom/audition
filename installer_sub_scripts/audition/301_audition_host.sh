@@ -29,8 +29,8 @@ hostname $MACH
 # PACKAGES
 # -----------------------------------------------------------------------------
 export DEBIAN_FRONTEND=noninteractive
-apt-get $APT_PROXY_OPTION -y openssh-server openssh-client
-apt-get $APT_PROXY_OPTION -y autojump man-db
+apt-get $APT_PROXY_OPTION -y install openssh-server openssh-client
+apt-get $APT_PROXY_OPTION -y install autojump man-db
 
 # -----------------------------------------------------------------------------
 # SYSTEM CONFIGURATION

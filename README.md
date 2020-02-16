@@ -1,3 +1,10 @@
+WARNING
+=======
+__Don't try this!__
+
+This is a private repository and the application is designed to run on a
+specific environment. It can damage your system.
+
 Installation
 ============
 Tested on Debian Buster.

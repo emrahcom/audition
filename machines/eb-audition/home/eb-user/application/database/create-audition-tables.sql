@@ -220,7 +220,7 @@ CREATE TABLE employer_blacklist (
     "performer_id" integer NOT NULL REFERENCES performer("id")
                                     ON DELETE CASCADE,
     "active" boolean NOT NULL DEFAULT TRUE,
-    "created_at" timestamp with time zone NOT NULL DEFAULT NOW(),
+    "created_at" timestamp with time zone NOT NULL DEFAULT NOW()
 );
 CREATE UNIQUE INDEX ON employer_blacklist("employer_id", "performer_id");
 CREATE INDEX ON employer_blacklist("performer_id");
@@ -246,7 +246,7 @@ CREATE TABLE employer_whitelist (
     "performer_id" integer NOT NULL REFERENCES performer("id")
                                     ON DELETE CASCADE,
     "active" boolean NOT NULL DEFAULT TRUE,
-    "created_at" timestamp with time zone NOT NULL DEFAULT NOW(),
+    "created_at" timestamp with time zone NOT NULL DEFAULT NOW()
 );
 CREATE UNIQUE INDEX ON employer_whitelist("employer_id", "performer_id");
 CREATE INDEX ON employer_whitelist("performer_id");
@@ -271,7 +271,7 @@ CREATE TABLE performer_blacklist (
     "employer_id" integer NOT NULL REFERENCES employer("id")
                                    ON DELETE CASCADE,
     "active" boolean NOT NULL DEFAULT TRUE,
-    "created_at" timestamp with time zone NOT NULL DEFAULT NOW(),
+    "created_at" timestamp with time zone NOT NULL DEFAULT NOW()
 );
 CREATE UNIQUE INDEX ON performer_blacklist("performer_id", "employer_id");
 CREATE INDEX ON performer_blacklist("employer_id");
@@ -297,7 +297,7 @@ CREATE TABLE performer_whitelist (
     "employer_id" integer NOT NULL REFERENCES employer("id")
                                    ON DELETE CASCADE,
     "active" boolean NOT NULL DEFAULT TRUE,
-    "created_at" timestamp with time zone NOT NULL DEFAULT NOW(),
+    "created_at" timestamp with time zone NOT NULL DEFAULT NOW()
 );
 CREATE UNIQUE INDEX ON performer_whitelist("performer_id", "employer_id");
 CREATE INDEX ON performer_whitelist("employer_id");

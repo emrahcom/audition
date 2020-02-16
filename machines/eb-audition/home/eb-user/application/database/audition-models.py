@@ -72,13 +72,13 @@ class Job(Table):
                             cascade='all, delete-orphan',
                             passive_deletes=True))
     title = Column(String(250), nullable=False)
-    cost = Column(Integer, nullable=False, default=0, server_default=0)
+    cost = Column(Integer, nullable=False, default=0, server_default=text('0'))
     status = Column(Integer, nullable=False, index=True, default=0,
-                  server_default=0)
-    hidden = Column(Boolean, nullable=False, index=True,
-                    default=False, server_default=text('FALSE'))
-    active = Column(Boolean, nullable=False, index=True,
-                    default=True, server_default=text('TRUE'))
+                    server_default=text('0'))
+    hidden = Column(Boolean, nullable=False, index=True, default=False,
+                    server_default=text('FALSE'))
+    active = Column(Boolean, nullable=False, index=True, default=True,
+                    server_default=text('TRUE'))
     created_at = Column(DateTime(timezone=True), nullable=False, index=True,
                         server_default=text('NOW()'))
     updated_at = Column(DateTime(timezone=True), nullable=False, index=True,

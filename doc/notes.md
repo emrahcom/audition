@@ -1,3 +1,4 @@
+## NOTES
 - başvuru başına maliyet
 - başvuru maliyetini işveren belirler
 - başvuru onaylanırsa maliyetin bir kısmı geri iade edilir
@@ -13,5 +14,14 @@
 - başvuran, cast ajans veya kişi olabilir
 - aynı ilanı veren işverenler problemi... öylese ancak cast manager ilan verebilir
 - ui ve application daha keskin ayrılsın. flask altında static yok...
-- yeni kayıt 0 kontör, referansla biri gelirse 1 kntör kazandırır
-- kontör bitince yeni kayıt olmalarını engelle
+- yeni kayıt 0 kontör, referansla biri gelirse 1 kontör kazandırır
+- kontör bitince yeni kayıt olmalarını engelle. yeni kayıtta ücretsiz kontör
+  yok
+- her ay belli bir oranda kontör düşer. kontör yokken arama yapamaz, ilanları
+  göremez ama kayıtlı kalır.
+- her ay yerine login olunan hergün için kontör düşşün. hesabı kullanmıyorsa
+  düşmesin. son 24 saatte login varsa yeni kontör düşmesin
+
+## LINKS
+- https://www.joisig.com/rules-software-startup-minimum-hassle
+- https://paddle.com/

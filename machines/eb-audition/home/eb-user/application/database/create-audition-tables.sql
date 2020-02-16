@@ -312,6 +312,8 @@ ALTER TABLE performer_whitelist OWNER TO audition;
 -- id                   : the record id
 -- performer_id         : the performer
 -- quantity             : the quantity
+-- sign                 : positive (1) or negative (-1) or neutral (0)
+-- ref                  : the reference id if applicable (mostly job id)
 -- active               : is active
 -- exchanged_at         : the exchange time
 -- ----------------------------------------------------------------------------
@@ -320,10 +322,13 @@ CREATE TABLE coin (
     "performer_id" integer NOT NULL REFERENCES performer("id")
                                     ON DELETE CASCADE,
     "quantity" integer NOT NULL DEFAULT 0,
+    "sign" integer NOT NULL DEFAULT 0,
+    "ref" integer NOT NULL DEFAULT 0,
     "active" boolean NOT NULL DEFAULT TRUE,
     "exchanged_at" timestamp with time zone NOT NULL DEFAULT NOW()
 );
 CREATE INDEX ON coin("performer_id");
+CREATE INDEX ON coin("sign");
 CREATE INDEX ON coin("active");
 CREATE INDEX ON coin("exchanged_at");
 ALTER TABLE coin OWNER TO audition;

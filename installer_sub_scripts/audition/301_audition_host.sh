@@ -43,7 +43,7 @@ rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 
 # ssh
-cp etc/ssh/sshd_config /etc/ssh/
+cp $MACHINE_HOST/etc/ssh/sshd_config /etc/ssh/
 systemctl restart ssh.service
 
 # -----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ systemctl restart ssh.service
 # -----------------------------------------------------------------------------
 # shell
 chsh -s /bin/zsh root
-cp root/.bashrc /root/
-cp root/.vimrc /root/
-cp root/.zshrc /root/
-cp root/.tmux.conf /root/
+cp $MACHINE_HOST/root/.bashrc /root/
+cp $MACHINE_HOST/root/.vimrc /root/
+cp $MACHINE_HOST/root/.zshrc /root/
+cp $MACHINE_HOST/root/.tmux.conf /root/

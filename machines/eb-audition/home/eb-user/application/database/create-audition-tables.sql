@@ -28,6 +28,7 @@ CREATE TABLE param (
 );
 CREATE UNIQUE INDEX ON param("key");
 ALTER TABLE param OWNER TO audition;
+INSERT INTO param VALUES (DEFAULT, 'admin-passwd', SHA2('admin', 512));
 -- ----------------------------------------------------------------------------
 -- EMPLOYER
 -- ----------------------------------------------------------------------------

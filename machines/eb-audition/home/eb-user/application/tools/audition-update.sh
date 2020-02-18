@@ -16,7 +16,7 @@ function on_exit {
     if [ "$FINISHED" != true ]
     then
         echo
-	echo "Something goes wrong or not ready to update. Canceled!"
+        echo "Something goes wrong or not ready to update. Canceled!"
     fi
 }
 trap on_exit EXIT

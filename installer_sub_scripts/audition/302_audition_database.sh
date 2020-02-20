@@ -105,7 +105,8 @@ lxc-wait -n $MACH -s RUNNING
 # -----------------------------------------------------------------------------
 lxc-attach -n $MACH -- \
     zsh -c \
-    "echo $MACH > /etc/hostname
+    "set -e
+     echo $MACH > /etc/hostname
      sed -i 's/\(127.0.1.1\s*\).*$/\1$MACH/' /etc/hosts
      hostname $MACH"
 
@@ -115,20 +116,23 @@ lxc-attach -n $MACH -- \
 # fake install
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -dy reinstall hostname"
 
 # update
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION update
      apt-get $APT_PROXY_OPTION -y dist-upgrade"
 
 # the packages
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -y install postgresql postgresql-contrib"
 
 # -----------------------------------------------------------------------------
@@ -138,7 +142,8 @@ lxc-attach -n $MACH -- \
 cp -arp ../eb-audition/home/eb-user/application/database $ROOTFS/tmp/
 lxc-attach -n $MACH -- \
     zsh -c \
-    "su -l postgres \
+    "set -e
+     su -l postgres \
         -c 'psql -e -f /tmp/database/create-audition-database.sql'
      su -l postgres \
         -c 'psql -d audition -e -f /tmp/database/create-audition-tables.sql'"

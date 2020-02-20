@@ -47,6 +47,7 @@ cp -arp home/eb-user/application/database \
     /var/lib/lxc/eb-audition-db/rootfs/tmp/
 lxc-attach -n eb-audition-db -- \
     zsh -c \
-    "timeout 10 bash -c 'until pg_isready; do sleep 1; done'
+    "set -e
+     timeout 10 bash -c 'until pg_isready; do sleep 1; done'
      su -l postgres \
         -c 'psql -d audition -e -f /tmp/database/audition-test-data.sql'"

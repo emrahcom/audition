@@ -118,7 +118,8 @@ lxc-wait -n $MACH -s RUNNING
 # -----------------------------------------------------------------------------
 lxc-attach -n $MACH -- \
     zsh -c \
-    "echo $MACH > /etc/hostname
+    "set -e
+     echo $MACH > /etc/hostname
      sed -i 's/\(127.0.1.1\s*\).*$/\1$MACH/' /etc/hosts
      hostname $MACH"
 
@@ -128,14 +129,16 @@ lxc-attach -n $MACH -- \
 # fake install
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -dy reinstall hostname"
 
 # the multimedia repo
 cp etc/apt/sources.list.d/multimedia.list $ROOTFS/etc/apt/sources.list.d/
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -oAcquire::AllowInsecureRepositories=true update
      apt-get $APT_PROXY_OPTION --allow-unauthenticated -y install \
              deb-multimedia-keyring"
@@ -143,40 +146,46 @@ lxc-attach -n $MACH -- \
 # update
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION update
      apt-get $APT_PROXY_OPTION -y dist-upgrade"
 
 # utils
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -y install git
      apt-get $APT_PROXY_OPTION -y install ffmpeg"
 
 # redis
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -y install redis-server"
 
 # postgresql-client
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -y install postgresql-client \
              --install-recommends"
 
 # python3
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -y install libpq-dev
      apt-get $APT_PROXY_OPTION -y install libcurl3-gnutls-dev librtmp-dev
      apt-get $APT_PROXY_OPTION -y install python3-pip --install-recommends"
 lxc-attach -n $MACH -- \
     zsh -c \
-    "pip3 install --upgrade setuptools wheel
+    "set -e
+     pip3 install --upgrade setuptools wheel
      pip3 install flake8
      pip3 install Flask Flask-RESTful Flask-Session
      pip3 install redis requests schema
@@ -185,17 +194,20 @@ lxc-attach -n $MACH -- \
 ## javascript
 #lxc-attach -n $MACH -- \
 #    zsh -c \
-#    "export DEBIAN_FRONTEND=noninteractive
+#    "set -e
+#     export DEBIAN_FRONTEND=noninteractive
 #     curl -sL https://deb.nodesource.com/setup_12.x | bash -
 #     apt-get $APT_PROXY_OPTION -y install nodejs"
 #lxc-attach -n $MACH -- \
 #    zsh -c \
-#    "npm install -g @vue/cli"
+#    "set -e
+#     npm install -g @vue/cli"
 
 # web
 lxc-attach -n $MACH -- \
     zsh -c \
-    "export DEBIAN_FRONTEND=noninteractive
+    "set -e
+     export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -y install ssl-cert ca-certificates certbot
      apt-get $APT_PROXY_OPTION -y install nginx-extras
      apt-get $APT_PROXY_OPTION -y install uwsgi uwsgi-plugin-python3"
@@ -243,13 +255,15 @@ sed -i "s/###DB-PASSWD###/$DB_PASSWD/" \
 
 lxc-attach -n eb-audition-db -- \
     zsh -c \
-    "echo ALTER ROLE audition WITH ENCRYPTED PASSWORD \'$DB_PASSWD\' | \
+    "set -e
+     echo ALTER ROLE audition WITH ENCRYPTED PASSWORD \'$DB_PASSWD\' | \
      su -l postgres -c psql"
 
 ## vue.js
 #lxc-attach -n $MACH -- \
 #    zsh -c \
-#    "cd /home/eb-user/application/ui
+#    "set -e
+#     cd /home/eb-user/application/ui
 #     mv audition-ui audition-ui.bck
 #     vue create -d audition-ui
 #     rsync -avh audition-ui.bck/ audition-ui/
@@ -264,13 +278,15 @@ lxc-attach -n $MACH -- chown eb-user:eb-user /home/eb-user/application -R
 # ssl
 lxc-attach -n $MACH -- \
     zsh -c \
-    "ln -s ssl-cert-snakeoil.pem /etc/ssl/certs/ssl-eb.pem
+    "set -e
+     ln -s ssl-cert-snakeoil.pem /etc/ssl/certs/ssl-eb.pem
      ln -s ssl-cert-snakeoil.key /etc/ssl/private/ssl-eb.key"
 
 # uwsgi
 lxc-attach -n $MACH -- \
     zsh -c \
-    "ln -s /home/eb-user/application/uwsgi/audition-uwsgi.ini \
+    "set -e
+     ln -s /home/eb-user/application/uwsgi/audition-uwsgi.ini \
            /etc/uwsgi/apps-enabled/audition.ini"
 lxc-attach -n $MACH -- systemctl stop uwsgi.service
 lxc-attach -n $MACH -- systemctl start uwsgi.service

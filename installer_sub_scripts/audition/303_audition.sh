@@ -133,16 +133,6 @@ lxc-attach -n $MACH -- \
      export DEBIAN_FRONTEND=noninteractive
      apt-get $APT_PROXY_OPTION -dy reinstall hostname"
 
-# the multimedia repo
-cp etc/apt/sources.list.d/multimedia.list $ROOTFS/etc/apt/sources.list.d/
-lxc-attach -n $MACH -- \
-    zsh -c \
-    "set -e
-     export DEBIAN_FRONTEND=noninteractive
-     apt-get $APT_PROXY_OPTION -oAcquire::AllowInsecureRepositories=true update
-     apt-get $APT_PROXY_OPTION --allow-unauthenticated -y install \
-             deb-multimedia-keyring"
-
 # update
 lxc-attach -n $MACH -- \
     zsh -c \
